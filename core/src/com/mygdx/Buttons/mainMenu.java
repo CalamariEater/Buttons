@@ -21,7 +21,7 @@ public class mainMenu implements Screen {
 
     final Buttons game;
 
-    private Texture backgroundTexture = new Texture(Gdx.files.internal("whiteBackground.png"));
+    private Texture backgroundTexture = new Texture(Gdx.files.internal("beveledBackground.png"));
     private Stage stage = new Stage(new ScreenViewport());
     private Table table = new Table();
     private Button button = buttonsHelper.createButton("GreenButtonOff", "GreenButtonOn", false);
@@ -91,8 +91,8 @@ public class mainMenu implements Screen {
 
 
         stage.getBatch().begin();
-        stage.getBatch().draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(),
-                Gdx.graphics.getHeight());
+        stage.getBatch().draw(backgroundTexture, 0, 0, stage.getWidth(),
+                stage.getHeight());
         stage.getBatch().end();
 
 

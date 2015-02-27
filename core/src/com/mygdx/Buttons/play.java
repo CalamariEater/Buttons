@@ -24,7 +24,7 @@ public class play implements Screen {
     final Buttons game;
 
     private Stage stage = new Stage();
-    private Texture texture = new Texture(Gdx.files.internal("circutBoardBackground.png"));
+    private Texture backgroundTexture = new Texture(Gdx.files.internal("circutBoardBackground.png"));
     private Table table = new Table();
 
     // Score
@@ -62,12 +62,12 @@ public class play implements Screen {
         // Set Table
         table.defaults().pad(10);
         table.setFillParent(true);
-        // table.debug();
+        table.debug();
 
         // Add start stuff
+        // table.add("Score: " + playerScore);
+        // table.add("Time: " + time);
         table.add(buttons[0]);  table.add(buttons[1]); table.add(buttons[2]); table.row();
-        // table.add(button4); table.add(button5); table.add(button6); table.row();
-        // table.add(button7); table.add(button8); table.add(button9); table.row();
 
         // Set input for button
         Gdx.input.setInputProcessor(stage);
@@ -99,8 +99,8 @@ public class play implements Screen {
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.getBatch().begin();
-        stage.getBatch().draw(texture, 0, 0, Gdx.graphics.getWidth(),
-                Gdx.graphics.getHeight());
+        stage.getBatch().draw(backgroundTexture, 0, 0, stage.getWidth(),
+                stage.getHeight());
         stage.getBatch().end();
 
         batch.begin();
@@ -163,7 +163,7 @@ public class play implements Screen {
     public void dispose() {
         Timer.instance().clear();
         stage.dispose();
-        texture.dispose();
+        backgroundTexture.dispose();
     }
 
     // Helper functions

@@ -20,7 +20,7 @@ public class gameOver implements Screen {
 
     final Buttons game;
 
-    private Texture backgroundTexture = new Texture(Gdx.files.internal("whiteBackground.png"));
+    private Texture backgroundTexture = new Texture(Gdx.files.internal("beveledBackground.png"));
     private Stage stage = new Stage();
     private Table table = new Table();
 
@@ -86,8 +86,8 @@ public class gameOver implements Screen {
         Gdx.gl20.glClearColor( 0.0F, 0.0F, 0.0F, 0.0F);
 
         stage.getBatch().begin();
-        stage.getBatch().draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(),
-                Gdx.graphics.getHeight());
+        stage.getBatch().draw(backgroundTexture, 0, 0, stage.getWidth(),
+                stage.getHeight());
         stage.getBatch().end();
 
 
