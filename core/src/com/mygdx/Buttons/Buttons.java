@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class Buttons extends Game {
 
+    // Idk how to work git
     // TODO: Error thingys
     // private Game game;
 
