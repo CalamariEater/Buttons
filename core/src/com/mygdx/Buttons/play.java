@@ -44,6 +44,7 @@ public class play implements Screen {
     private boolean isPressed = false;
 
     public play (final Buttons it) {
+        // TODO: Possibly. Format using Json files?
         this.game = it;
 
         // Font
@@ -73,6 +74,7 @@ public class play implements Screen {
         Gdx.input.setInputProcessor(stage);
         addClickListener(buttons[0]); addClickListener(buttons[1]); addClickListener(buttons[2]);
 
+        // TODO: Implement better timer ~ As time goes by
         // ::TIMER::
         Timer.schedule(new Timer.Task() {
             @Override
@@ -166,6 +168,7 @@ public class play implements Screen {
         backgroundTexture.dispose();
     }
 
+    // TODO: Maybe. Add "bad button"?
     // Helper functions
     public void addClickListener ( final Button button ) {
         button.addListener( new ClickListener() {
@@ -207,6 +210,7 @@ public class play implements Screen {
             time += 2;
     }
 
+    // TODO: Maybe not. Add visual effects?
     public void timeEffect () {
         if ( isPressed == true && lvl3 == false && lvl2 == true) {
             font.draw(batch, "+1", 150, Gdx.graphics.getHeight() - 60F);

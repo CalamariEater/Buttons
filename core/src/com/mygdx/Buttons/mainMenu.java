@@ -24,6 +24,8 @@ public class mainMenu implements Screen {
     private Texture backgroundTexture = new Texture(Gdx.files.internal("beveledBackground.png"));
     private Stage stage = new Stage(new ScreenViewport());
     private Table table = new Table();
+
+    // TODO: Create menu buttons
     private Button button = buttonsHelper.createButton("GreenButtonOff", "GreenButtonOn", false);
     private Button button2 = buttonsHelper.createButton("GreenButtonOff", "GreenButtonOn", false);
 
@@ -101,6 +103,8 @@ public class mainMenu implements Screen {
 
     @Override
     public void resize(int width, int height) {
+        // TODO: Fix resize bug ~ Buttons won't resize properly?
+
         stage.getViewport().update(width, height, true);
         // button.setSize( button.getPrefWidth()*0.5F, button.getPrefHeight()*0.5F);
         // button2.setSize( button.getPrefWidth()*0.5F, button.getPrefHeight()*0.5F);
