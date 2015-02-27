@@ -28,31 +28,20 @@ public class play implements Screen {
     private Table table = new Table();
 
     // Score
-    private SpriteBatch batch = new SpriteBatch();
     private int playerScore = 0;
+    private SpriteBatch batch = new SpriteBatch();
     private BitmapFont font = new BitmapFont();
 
     // ::TIMER::
-    private int time = 10;
+    private double time = 10;
 
     // Buttons
     Button[] buttons = new Button[9];
 
-    /*
-    Button button = buttonsHelper.createButton("ButtonOnTest", "ButtonOffTest");
-    Button button2 = buttonsHelper.createButton("ButtonOnTest", "ButtonOffTest");
-    Button button3 = buttonsHelper.createButton("ButtonOnTest", "ButtonOffTest");
-    Button button4 = buttonsHelper.createButton("ButtonOnTest", "ButtonOffTest");
-    Button button5 = buttonsHelper.createButton("ButtonOnTest", "ButtonOffTest");
-    Button button6 = buttonsHelper.createButton("ButtonOnTest", "ButtonOffTest");
-    Button button7 = buttonsHelper.createButton("ButtonOnTest", "ButtonOffTest");
-    Button button8 = buttonsHelper.createButton("ButtonOnTest", "ButtonOffTest");
-    Button button9 = buttonsHelper.createButton("ButtonOnTest", "ButtonOffTest");
-    */
-
     // Flags
     private boolean lvl2 = false;
     private boolean lvl3 = false;
+    private boolean isPressed = false;
 
     public play (final Buttons it) {
         this.game = it;
@@ -65,8 +54,6 @@ public class play implements Screen {
             buttons[i] = buttonsHelper.createButton("GreenButtonOff", "GreenButtonOn", false);
             System.out.println("Index: " + i);
         }
-
-        // TESTING::Button Change style...
 
         // Set Stage
         stage.clear();
@@ -90,12 +77,12 @@ public class play implements Screen {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                pickRandomButton(buttons);
-                time -= 1;
+                pickRandomButton();
+                time -= 1D;
                 if (lvl2 == true)
-                    pickRandomButton(buttons);
+                    pickRandomButton();
                 if (lvl3 == true)
-                    pickRandomButton(buttons);
+                    pickRandomButton();
             }
         }, 1F, 1F);
 
@@ -120,9 +107,11 @@ public class play implements Screen {
 
         // Draw score
         font.draw(batch, "Score: " + playerScore, 0, Gdx.graphics.getHeight() - 40F);
+        // scoreEffect();
 
         // ::TIME::
         font.draw(batch, "Time: " + (time), 0, Gdx.graphics.getHeight() - 60F);
+        // timeEffect();
 
         batch.end();
 
@@ -143,6 +132,8 @@ public class play implements Screen {
             game.setScreen(new gameOver(game));
             dispose();
         }
+
+        isPressed = false;
 
         stage.draw();
 
@@ -180,19 +171,24 @@ public class play implements Screen {
         button.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+
+                isPressed = true;
                 System.out.println("BUTTON PRESSED!");
+
+                // Score add
                 playerScore += 1;
-                time += 1;
+
+                addTime();
+
+                // Disable button
                 button.setTouchable(Touchable.disabled);
                 button.setStyle(createButtonStyle("GreenButtonOff", "GreenButtonOn", true));
-                // super.clicked(event, x, y);
-
-                // pickRandomButton(buttons);
             }
         });
     }
 
-    public void pickRandomButton ( Button[] buttons ) {
+    // Picks a random button
+    public void pickRandomButton () {
         int i = Math.round(random(7));
         System.out.println("pickRandomButton called: " + i);
 
@@ -202,5 +198,30 @@ public class play implements Screen {
         buttons[i].setStyle(createButtonStyle("GreenButtonOff", "GreenButtonOn", false));
     }
 
+    public void addTime () {
+        if (lvl2 == true && lvl3 == false)
+            time += 1;
+        else if (lvl3 == true)
+            time += .05;
+        else
+            time += 2;
+    }
 
+    public void timeEffect () {
+        if ( isPressed == true && lvl3 == false && lvl2 == true) {
+            font.draw(batch, "+1", 150, Gdx.graphics.getHeight() - 60F);
+        }
+        else if ( isPressed == true && lvl3 == true ) {
+            font.draw(batch, "+.05", 150, Gdx.graphics.getHeight() - 60F);
+        }
+        else if ( isPressed == true ) {
+            font.draw(batch, "+2", 150, Gdx.graphics.getHeight() - 60F);
+        }
+    }
+
+    public void scoreEffect () {
+        if ( isPressed == true ) {
+            font.draw(batch, "+1", 150, Gdx.graphics.getHeight() - 40F);
+        }
+    }
 }
