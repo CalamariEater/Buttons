@@ -62,6 +62,7 @@ public class play implements Screen {
             System.out.println("Index: " + i);
         }
 
+
         // Set Stage
         stage.clear();
         stage.addActor(table);
