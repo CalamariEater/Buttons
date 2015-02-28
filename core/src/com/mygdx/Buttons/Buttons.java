@@ -38,11 +38,14 @@ public class Buttons extends Game {
     // private Camera camera;
     // private Viewport viewport;
 
+    // TODO: ASSET MANAGER?!?!
     // Asset Manager ~ ::TO BE TESTED::
     //public static AssetManager manager = new AssetManager();
 
     @Override
     public void create() {
+
+        // AssetManager manager = new AssetManager();
 
         // ::NEW SCREEN TESTING::
         this.setScreen(new mainMenu(this));

@@ -3,8 +3,10 @@ package com.mygdx.Buttons;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -25,14 +27,14 @@ public class mainMenu implements Screen {
     private Stage stage = new Stage(new ScreenViewport());
     private Table table = new Table();
 
-    // TODO: Create menu buttons
-    private Button button = buttonsHelper.createButton("GreenButtonOff", "GreenButtonOn", false);
-    private Button button2 = buttonsHelper.createButton("GreenButtonOff", "GreenButtonOn", false);
+    private Button button = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
+    private Button button2 = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
 
     // Label
-    // private Skin skin = new Skin();
-    // private Label title = new Label("Buttons", skin);
-
+    private BitmapFont font = new BitmapFont(Gdx.files.internal("digital.fnt"));
+    private Label.LabelStyle labelStyle = new Label.LabelStyle( font, Color.RED );
+    // private Skin skin = new Skin(Gdx.files.internal("SkinTest.json"));
+    private Label title = new Label("Buttons", labelStyle);
 
     public mainMenu (final Buttons it) {
         game = it;
@@ -47,56 +49,51 @@ public class mainMenu implements Screen {
         table.defaults().pad(10);
         table.debug();
 
-        // Create button using buttonsHelper
-
-
-        // Assign stuff
+        // Add objects to table
+        table.add(title);
+        table.row();
         table.add(button);
         table.row();
         table.add(button2);
-        stage.addActor(table);
 
+        // Add table to stage
+        stage.addActor(table);
 
         // Set input for button
         Gdx.input.setInputProcessor(stage);
+
         button.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("BUTTON PRESSED!");
+                System.out.println(".");
                 game.setScreen(new play(game));
                 // super.clicked(event, x, y);
-
             }
         });
 
         button2.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Quit button test PRESSED");
+                System.out.println(".");
                 Gdx.app.exit();
                 // super.clicked(event, x, y);
 
             }
         });
 
-
-
     }
 
     @Override
     public void render(float delta) {
 
-        // System.out.println("In Render Main Menu");
-
         Gdx.gl20.glClearColor( 0.0F, 0.0F, 0.0F, 0.0F);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
+        // Display background TODO: Possibly. Change background to be rendered with stage/table
         stage.getBatch().begin();
         stage.getBatch().draw(backgroundTexture, 0, 0, stage.getWidth(),
                 stage.getHeight());
         stage.getBatch().end();
-
 
         stage.draw();
     }

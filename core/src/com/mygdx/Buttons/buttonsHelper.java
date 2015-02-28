@@ -37,6 +37,7 @@ public class buttonsHelper {
         createButtonStyle(Off, On, inverse);
         return new Button(buttonStyle);
     }
+
     /*
     public static void addClickListener ( Button button ) {
         button.addListener( new ClickListener() {

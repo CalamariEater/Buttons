@@ -5,28 +5,56 @@ filter: Nearest,Nearest
 repeat: none
 ButtonOnTest
   rotate: false
-  xy: 1, 1
+  xy: 1, 149
   size: 159, 73
   orig: 159, 73
   offset: 0, 0
   index: -1
 ButtonOffTest
   rotate: false
-  xy: 162, 2
+  xy: 1, 75
+  size: 159, 72
+  orig: 159, 72
+  offset: 0, 0
+  index: -1
+GrayButtonOff
+  rotate: false
+  xy: 162, 150
+  size: 159, 72
+  orig: 159, 72
+  offset: 0, 0
+  index: -1
+GrayButtonOn
+  rotate: false
+  xy: 1, 1
   size: 159, 72
   orig: 159, 72
   offset: 0, 0
   index: -1
 GreenButtonOff
   rotate: false
-  xy: 323, 2
+  xy: 162, 76
   size: 159, 72
   orig: 159, 72
   offset: 0, 0
   index: -1
 GreenButtonOn
   rotate: false
-  xy: 484, 2
+  xy: 323, 150
+  size: 159, 72
+  orig: 159, 72
+  offset: 0, 0
+  index: -1
+RedButtonOff
+  rotate: false
+  xy: 162, 2
+  size: 159, 72
+  orig: 159, 72
+  offset: 0, 0
+  index: -1
+RedButtonOn
+  rotate: false
+  xy: 323, 76
   size: 159, 72
   orig: 159, 72
   offset: 0, 0

@@ -2,6 +2,7 @@ package com.mygdx.Buttons;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
@@ -24,16 +26,20 @@ public class play implements Screen {
     final Buttons game;
 
     private Stage stage = new Stage();
-    private Texture backgroundTexture = new Texture(Gdx.files.internal("circutBoardBackground.png"));
+    private Texture backgroundTexture = new Texture(Gdx.files.internal("circuitBoardBackground.png"));
     private Table table = new Table();
+
+    // ::TIMER::
+    private double time = 10;
 
     // Score
     private int playerScore = 0;
     private SpriteBatch batch = new SpriteBatch();
-    private BitmapFont font = new BitmapFont();
+    private BitmapFont font = new BitmapFont(Gdx.files.internal("digital.fnt"));
 
-    // ::TIMER::
-    private double time = 10;
+    private Label.LabelStyle labelStyle = new Label.LabelStyle( font, Color.RED );
+    private Label labelScore = new Label( "Score: " + playerScore, labelStyle);
+    private Label labelTime = new Label( "Time: " + time, labelStyle );
 
     // Buttons
     Button[] buttons = new Button[9];
@@ -48,7 +54,7 @@ public class play implements Screen {
         this.game = it;
 
         // Font
-        font.setScale(2);
+        // font.setScale(2);
 
         // Set buttons
         for (int i = 0; i < 9; i++) {
@@ -66,8 +72,10 @@ public class play implements Screen {
         table.debug();
 
         // Add start stuff
-        // table.add("Score: " + playerScore);
-        // table.add("Time: " + time);
+        table.add(labelScore);
+        table.row();
+        table.add(labelTime);
+        table.row();
         table.add(buttons[0]);  table.add(buttons[1]); table.add(buttons[2]); table.row();
 
         // Set input for button
@@ -100,6 +108,7 @@ public class play implements Screen {
         Gdx.gl20.glClearColor( 0.0F, 0.0F, 0.0F, 0.0F);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // Draw background
         stage.getBatch().begin();
         stage.getBatch().draw(backgroundTexture, 0, 0, stage.getWidth(),
                 stage.getHeight());
@@ -108,11 +117,12 @@ public class play implements Screen {
         batch.begin();
 
         // Draw score
-        font.draw(batch, "Score: " + playerScore, 0, Gdx.graphics.getHeight() - 40F);
+        // font.draw(batch, "Score: " + playerScore, 0, Gdx.graphics.getHeight() - 35F);
         // scoreEffect();
-
+        labelScore.setText("Score: " + playerScore);
+        labelTime.setText( "Time: " + time);
         // ::TIME::
-        font.draw(batch, "Time: " + (time), 0, Gdx.graphics.getHeight() - 60F);
+        // font.draw(batch, "Time: " + (time), 0, Gdx.graphics.getHeight() - 60F);
         // timeEffect();
 
         batch.end();
@@ -136,6 +146,8 @@ public class play implements Screen {
         }
 
         isPressed = false;
+
+        // table.layout();
 
         stage.draw();
 
@@ -176,7 +188,7 @@ public class play implements Screen {
             public void clicked(InputEvent event, float x, float y) {
 
                 isPressed = true;
-                System.out.println("BUTTON PRESSED!");
+                System.out.println("+");
 
                 // Score add
                 playerScore += 1;
@@ -202,10 +214,8 @@ public class play implements Screen {
     }
 
     public void addTime () {
-        if (lvl2 == true && lvl3 == false)
+        if ( lvl2 && lvl3 )
             time += 1;
-        else if (lvl3 == true)
-            time += .05;
         else
             time += 2;
     }

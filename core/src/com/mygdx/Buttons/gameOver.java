@@ -1,15 +1,15 @@
 package com.mygdx.Buttons;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -25,14 +25,15 @@ public class gameOver implements Screen {
     private Table table = new Table();
 
     // Label
-    // private Skin skin = new Skin();
-    // private Label title = new Label("Buttons", skin);
+    private BitmapFont font = new BitmapFont(Gdx.files.internal("digital.fnt"));
+    private Label.LabelStyle labelStyle = new Label.LabelStyle( font, Color.RED );
+    // private Skin skin = new Skin(Gdx.files.internal("SkinTest.json"));
+    private Label gameOver = new Label("Game Over", labelStyle);
 
 
     public gameOver (final Buttons it) {
         game = it;
     }
-
 
     @Override
     public void show() {
@@ -43,10 +44,12 @@ public class gameOver implements Screen {
         table.debug();
 
         // Create button using buttonsHelper
-        Button button = buttonsHelper.createButton("ButtonOffTest", "ButtonOnTest", false);
-        Button button2 = buttonsHelper.createButton("ButtonOffTest", "ButtonOnTest", false);
+        Button button = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
+        Button button2 = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
 
         // Assign stuff
+        table.add(gameOver);
+        table.row();
         table.add(button);
         table.row();
         table.add(button2);
