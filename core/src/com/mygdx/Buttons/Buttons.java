@@ -40,12 +40,10 @@ public class Buttons extends Game {
 
     // TODO: ASSET MANAGER?!?!
     // Asset Manager ~ ::TO BE TESTED::
-    //public static AssetManager manager = new AssetManager();
+    // public static AssetManager manager = new AssetManager();
 
     @Override
     public void create() {
-
-        // AssetManager manager = new AssetManager();
 
         // ::NEW SCREEN TESTING::
         this.setScreen(new mainMenu(this));

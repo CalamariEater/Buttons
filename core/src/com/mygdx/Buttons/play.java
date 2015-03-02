@@ -161,12 +161,13 @@ public class play implements Screen {
 
     @Override
     public void pause() {
+        // TODO: PAUSE ALL THE THINGS
 
     }
 
     @Override
     public void resume() {
-
+        // TODO: RESUME ALL THE THINGS
     }
 
     @Override
@@ -181,7 +182,7 @@ public class play implements Screen {
         backgroundTexture.dispose();
     }
 
-    // TODO: Maybe. Add "bad button"?
+    // TODO: I smell a bug somewhere.... When bad button replaced; possible - still happening...
     // Helper functions
     public void addClickListener ( final Button button ) {
         button.addListener( new ClickListener() {
@@ -199,27 +200,65 @@ public class play implements Screen {
                 // Disable button
                 button.setTouchable(Touchable.disabled);
                 button.setStyle(createButtonStyle("GreenButtonOff", "GreenButtonOn", true));
+                button.clearListeners();
+            }
+        });
+    }
+
+    public void addBadClickListener ( final Button button ) {
+        button.addListener( new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+
+                isPressed = true;
+                System.out.println("-");
+
+                time -= 1;
+
+                // Disable button
+                button.setTouchable(Touchable.disabled);
+                button.setStyle(createButtonStyle("RedButtonOff", "RedButtonOn", true));
+                button.clearListeners();
             }
         });
     }
 
     // Picks a random button
-    public void pickRandomButton () {
+    public int randomNumber () {
         int i = Math.round(random(7));
-        System.out.println("pickRandomButton called: " + i);
+        System.out.println("random called: " + i);
+        return i;
+    }
 
-        // Sets button touchable
-        buttons[i].setTouchable(Touchable.enabled);
+    // Sets button touchable
+    public void setTouchable(int index) {
+        buttons[index].setTouchable(Touchable.enabled);
+        buttons[index].setStyle(createButtonStyle("GreenButtonOff", "GreenButtonOn", false));
+        addClickListener(buttons[index]);
+    }
 
-        buttons[i].setStyle(createButtonStyle("GreenButtonOff", "GreenButtonOn", false));
+    // Sets a bad button
+    public void setBadButton (int index) {
+        buttons[index].setTouchable(Touchable.enabled);
+        buttons[index].setStyle(createButtonStyle("RedButtonOff", "RedButtonOn", false));
+        addBadClickListener(buttons[index]);
+    }
+
+    // Picks random button and sets either bad button or good button.
+    public void pickRandomButton () {
+        int i = randomNumber();
+        if (randomNumber() > 4.5)
+            setTouchable(i);
+        else setBadButton(i);
     }
 
     public void addTime () {
-        if ( lvl2 && lvl3 )
+        if ( lvl2 )
             time += 1;
         else
             time += 2;
     }
+
 
     // TODO: Maybe not. Add visual effects?
     public void timeEffect () {
