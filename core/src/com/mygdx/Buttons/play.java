@@ -62,7 +62,6 @@ public class play implements Screen {
             System.out.println("Index: " + i);
         }
 
-
         // Set Stage
         stage.clear();
         stage.addActor(table);
@@ -291,4 +290,25 @@ public class play implements Screen {
             font.draw(batch, "+1", 150, Gdx.graphics.getHeight() - 40F);
         }
     }
+
+    /* Pseudo:
+        When listener added
+            increment corresponding listener (badListener or goodListener)
+            upon press -> clear badListener/goodListener
+
+        Separate
+            in a new method: have said method calculate bounds of a cell
+
+            public void getCellBounds
+            table.getCell(anybutton).getX();
+            table.getCell(anybutton).getY();
+            ????
+
+            When resize recalculate
+
+        In render
+            using bounds of the cell
+                display based upon number of badListeners or goodListeners
+
+     */
 }
