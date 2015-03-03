@@ -115,7 +115,7 @@ public class play implements Screen {
                 stage.getHeight());
         stage.getBatch().end();
 
-        batch.begin();
+        // batch.begin();
 
         // Draw score
         // font.draw(batch, "Score: " + playerScore, 0, Gdx.graphics.getHeight() - 35F);
@@ -126,7 +126,7 @@ public class play implements Screen {
         // font.draw(batch, "Time: " + (time), 0, Gdx.graphics.getHeight() - 60F);
         // timeEffect();
 
-        batch.end();
+        // batch.end();
 
         // Lvl check
         if (playerScore >= 5 && lvl2 == false) {
@@ -182,7 +182,7 @@ public class play implements Screen {
         backgroundTexture.dispose();
     }
 
-    // TODO: I smell a bug somewhere.... When bad button replaced; possible - still happening...
+    // TODO: Bug found ~ Continues to add clickListeners to buttons whom already have clickListeners ::: Possible feature?
     // Helper functions
     public void addClickListener ( final Button button ) {
         button.addListener( new ClickListener() {
@@ -224,8 +224,17 @@ public class play implements Screen {
     }
 
     // Picks a random button
-    public int randomNumber () {
-        int i = Math.round(random(7));
+    public int randomNumber ( ) {
+        int i = 0;
+        if ( lvl2 ) {
+            i = Math.round(random(5));
+        }
+        else if ( lvl3 ) {
+            i = Math.round(random(8));
+        }
+        else {
+            i = Math.round(random(2));
+        }
         System.out.println("random called: " + i);
         return i;
     }
@@ -247,7 +256,11 @@ public class play implements Screen {
     // Picks random button and sets either bad button or good button.
     public void pickRandomButton () {
         int i = randomNumber();
-        if (randomNumber() > 4.5)
+        if ( lvl3 && randomNumber() > 4.5 )
+            setTouchable(i);
+        else if ( lvl2 && randomNumber() > 2.5 )
+            setTouchable(i);
+        else if ( !lvl2 && !lvl3 && randomNumber() > 1 )
             setTouchable(i);
         else setBadButton(i);
     }
@@ -262,19 +275,19 @@ public class play implements Screen {
 
     // TODO: Maybe not. Add visual effects?
     public void timeEffect () {
-        if ( isPressed == true && lvl3 == false && lvl2 == true) {
+        if (isPressed && !lvl3 && lvl2) {
             font.draw(batch, "+1", 150, Gdx.graphics.getHeight() - 60F);
         }
-        else if ( isPressed == true && lvl3 == true ) {
+        else if (isPressed && lvl3) {
             font.draw(batch, "+.05", 150, Gdx.graphics.getHeight() - 60F);
         }
-        else if ( isPressed == true ) {
+        else if (isPressed) {
             font.draw(batch, "+2", 150, Gdx.graphics.getHeight() - 60F);
         }
     }
 
     public void scoreEffect () {
-        if ( isPressed == true ) {
+        if ( isPressed ) {
             font.draw(batch, "+1", 150, Gdx.graphics.getHeight() - 40F);
         }
     }

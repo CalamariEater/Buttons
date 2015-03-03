@@ -24,7 +24,7 @@ public class mainMenu implements Screen {
     final Buttons game;
 
     private Texture backgroundTexture = new Texture(Gdx.files.internal("beveledBackground.png"));
-    private Stage stage = new Stage(new ScreenViewport());
+    private Stage stage = new Stage();
     private Table table = new Table();
 
     private Button button = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
@@ -43,21 +43,6 @@ public class mainMenu implements Screen {
 
     @Override
     public void show() {
-
-        // Set table up
-        table.setFillParent(true);
-        table.defaults().pad(10);
-        table.debug();
-
-        // Add objects to table
-        table.add(title);
-        table.row();
-        table.add(button);
-        table.row();
-        table.add(button2);
-
-        // Add table to stage
-        stage.addActor(table);
 
         // Set input for button
         Gdx.input.setInputProcessor(stage);
@@ -81,6 +66,22 @@ public class mainMenu implements Screen {
             }
         });
 
+        // Set table up
+        table.setFillParent(true);
+        table.defaults().pad(10);
+        table.debug();
+
+        // Add objects to table
+        table.add(title);
+        table.row();
+        table.add(button);
+        table.row();
+        table.add(button2);
+
+        // Add table to stage
+        stage.addActor(table);
+
+
     }
 
     @Override
@@ -89,20 +90,21 @@ public class mainMenu implements Screen {
         Gdx.gl20.glClearColor( 0.0F, 0.0F, 0.0F, 0.0F);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Display background TODO: Possibly. Change background to be rendered with stage/table
         stage.getBatch().begin();
         stage.getBatch().draw(backgroundTexture, 0, 0, stage.getWidth(),
                 stage.getHeight());
         stage.getBatch().end();
 
+        stage.act(delta);
         stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-        // TODO: Fix resize bug ~ Buttons won't resize properly?
+        // TODO: Fix resize bug ~ Buttons won't resize properly :: DKFJLDSKLFJDLFK
 
         stage.getViewport().update(width, height, true);
+        // table.invalidateHierarchy();
         // button.setSize( button.getPrefWidth()*0.5F, button.getPrefHeight()*0.5F);
         // button2.setSize( button.getPrefWidth()*0.5F, button.getPrefHeight()*0.5F);
     }
