@@ -2,6 +2,7 @@ package com.mygdx.Buttons;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -38,6 +39,8 @@ public class gameOver implements Screen {
     @Override
     public void show() {
 
+        final Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button16.mp3"));
+
         // Set table up
         table.setFillParent(true);
         table.defaults().pad(10);
@@ -61,6 +64,7 @@ public class gameOver implements Screen {
         button.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                soundClick.play();
                 System.out.println("BUTTON PRESSED!");
                 game.setScreen(new play(game));
                 // super.clicked(event, x, y);
@@ -71,6 +75,7 @@ public class gameOver implements Screen {
         button2.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                soundClick.play();
                 System.out.println("Quit button test PRESSED");
                 Gdx.app.exit();
                 // super.clicked(event, x, y);

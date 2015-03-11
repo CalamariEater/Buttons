@@ -2,6 +2,7 @@ package com.mygdx.Buttons;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -49,9 +50,13 @@ public class play implements Screen {
     private boolean lvl3 = false;
     private boolean isPressed = false;
 
+    final Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button16.mp3"));
+
     public play (final Buttons it) {
         // TODO: Possibly. Format using Json files?
         this.game = it;
+
+
 
         // Font
         // font.setScale(2);
@@ -82,7 +87,6 @@ public class play implements Screen {
         Gdx.input.setInputProcessor(stage);
         addClickListener(buttons[0]); addClickListener(buttons[1]); addClickListener(buttons[2]);
 
-        // TODO: Implement better timer ~ As time goes by
         // ::TIMER::
         Timer.schedule(new Timer.Task() {
             @Override
@@ -181,14 +185,13 @@ public class play implements Screen {
         backgroundTexture.dispose();
     }
 
-    // TODO: Bug found ~ Continues to add clickListeners to buttons whom already have clickListeners ::: Possible feature?
     // Helper functions
     public void addClickListener ( final Button button ) {
         button.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
-                isPressed = true;
+                soundClick.play();
+                // isPressed = true;
                 System.out.println("+");
 
                 // Score add
@@ -208,8 +211,8 @@ public class play implements Screen {
         button.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
-                isPressed = true;
+                soundClick.play();
+                // isPressed = true;
                 System.out.println("-");
 
                 time -= 1;
@@ -222,7 +225,7 @@ public class play implements Screen {
         });
     }
 
-    // Picks a random button
+    // Picks a random index
     public int randomNumber ( ) {
         int i = 0;
         if ( lvl2 ) {
@@ -240,16 +243,23 @@ public class play implements Screen {
 
     // Sets button touchable
     public void setTouchable(int index) {
-        buttons[index].setTouchable(Touchable.enabled);
-        buttons[index].setStyle(createButtonStyle("GreenButtonOff", "GreenButtonOn", false));
-        addClickListener(buttons[index]);
+        if ( 0 == buttons[index].getListeners().size ) {
+            buttons[index].setTouchable(Touchable.enabled);
+            buttons[index].setStyle(createButtonStyle("GreenButtonOff", "GreenButtonOn", false));
+            addClickListener(buttons[index]);
+            System.out.println("added a click listener");
+        }
+
     }
 
     // Sets a bad button
     public void setBadButton (int index) {
-        buttons[index].setTouchable(Touchable.enabled);
-        buttons[index].setStyle(createButtonStyle("RedButtonOff", "RedButtonOn", false));
-        addBadClickListener(buttons[index]);
+        if ( 0 == buttons[index].getListeners().size ) {
+            buttons[index].setTouchable(Touchable.enabled);
+            buttons[index].setStyle(createButtonStyle("RedButtonOff", "RedButtonOn", false));
+            addBadClickListener(buttons[index]);
+            System.out.println("added a BAD click listener");
+        }
     }
 
     // Picks random button and sets either bad button or good button.
@@ -271,8 +281,8 @@ public class play implements Screen {
             time += 2;
     }
 
-
     // TODO: Maybe not. Add visual effects?
+    /*
     public void timeEffect () {
         if (isPressed && !lvl3 && lvl2) {
             font.draw(batch, "+1", 150, Gdx.graphics.getHeight() - 60F);
@@ -291,7 +301,7 @@ public class play implements Screen {
         }
     }
 
-    /* Pseudo:
+    /* Pseudo: For Add rings around buttons
         When listener added
             increment corresponding listener (badListener or goodListener)
             upon press -> clear badListener/goodListener
@@ -308,7 +318,7 @@ public class play implements Screen {
 
         In render
             using bounds of the cell
-                display based upon number of badListeners or goodListeners
+                display rings based upon number of badListeners or goodListeners
 
      */
 }

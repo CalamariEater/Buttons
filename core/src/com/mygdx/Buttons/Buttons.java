@@ -1,9 +1,11 @@
 package com.mygdx.Buttons;
 
+import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,6 +22,7 @@ public class Buttons extends Game {
     // TODO: Error thingys
     // private Game game;
 
+    // TODO: Code clean up. Seriously. Its bothering me
     //private Button button;
     /*
     private Button.ButtonStyle buttonStyle;
@@ -38,12 +41,14 @@ public class Buttons extends Game {
     // private Camera camera;
     // private Viewport viewport;
 
-    // TODO: ASSET MANAGER?!?!
+    // TODO: ASSET MANAGER?!?! Maybe
     // Asset Manager ~ ::TO BE TESTED::
     // public static AssetManager manager = new AssetManager();
 
+
     @Override
     public void create() {
+
 
         // ::NEW SCREEN TESTING::
         this.setScreen(new mainMenu(this));
@@ -142,9 +147,10 @@ public class Buttons extends Game {
 
     @Override
     public void dispose() {
+        // soundClick.dispose();
         // buttonsHelper.buttonDispose();
         // stage.dispose();
         // texture.dispose();
-        // stage.dispose();
+        // stage.dispos
     }
 }
