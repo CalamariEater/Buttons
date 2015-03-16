@@ -30,6 +30,7 @@ public class gameOver implements Screen {
     private Label.LabelStyle labelStyle = new Label.LabelStyle( font, Color.RED );
     // private Skin skin = new Skin(Gdx.files.internal("SkinTest.json"));
     private Label gameOver = new Label("Game Over", labelStyle);
+    private Label labelHighscore = new Label( "Highscore: " + mainMenu.pref.getInteger("score", 0), labelStyle);
 
 
     public gameOver (final Buttons it) {
@@ -44,7 +45,7 @@ public class gameOver implements Screen {
         // Set table up
         table.setFillParent(true);
         table.defaults().pad(10);
-        table.debug();
+        // table.debug();
 
         // Create button using buttonsHelper
         Button button = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
@@ -56,6 +57,9 @@ public class gameOver implements Screen {
         table.add(button);
         table.row();
         table.add(button2);
+        table.row();
+        table.add(labelHighscore);
+
         stage.addActor(table);
 
 

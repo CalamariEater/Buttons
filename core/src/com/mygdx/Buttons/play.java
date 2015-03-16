@@ -69,7 +69,7 @@ public class play implements Screen {
         // Set Table
         table.defaults().pad(10);
         table.setFillParent(true);
-        table.debug();
+        // table.debug();
 
         // Add start stuff
         table.add(labelScore); table.add(labelHighscore);

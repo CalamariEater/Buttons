@@ -79,7 +79,7 @@ public class mainMenu implements Screen {
         // Set table up
         table.setFillParent(true);
         table.defaults().pad(10);
-        table.debug();
+        // table.debug();
 
         // Add objects to table
         table.add(title);
