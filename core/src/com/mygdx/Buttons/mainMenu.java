@@ -1,6 +1,7 @@
 package com.mygdx.Buttons;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -19,6 +20,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
  */
 public class mainMenu implements Screen {
 
+    public static Preferences pref = Gdx.app.getPreferences("My Preferences");
+
     final Buttons game;
 
     private Texture backgroundTexture = new Texture(Gdx.files.internal("beveledBackground.png"));
@@ -29,11 +32,13 @@ public class mainMenu implements Screen {
     private Button button = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
     private Button button2 = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
 
-    // Label
+    // Labels
     private BitmapFont font = new BitmapFont(Gdx.files.internal("digital.fnt"));
     private Label.LabelStyle labelStyle = new Label.LabelStyle( font, Color.RED );
     // private Skin skin = new Skin(Gdx.files.internal("SkinTest.json"));
     private Label title = new Label("Buttons", labelStyle);
+
+    private Label highscoreLabel = new Label("Highscore: " + pref.getInteger("score", 0), labelStyle );
 
     public mainMenu (final Buttons it) {
         game = it;
@@ -82,6 +87,8 @@ public class mainMenu implements Screen {
         table.add(button);
         table.row();
         table.add(button2);
+        table.row();
+        table.add(highscoreLabel);
 
         // Add table to stage
         stage.addActor(table);

@@ -1,9 +1,6 @@
 package com.mygdx.Buttons;
 
-import com.badlogic.gdx.Audio;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
@@ -26,7 +23,6 @@ public class Buttons extends Game {
     // TODO: ASSET MANAGER ~ Maybe
     // Asset Manager ~ ::TO BE TESTED::
     // public static AssetManager manager = new AssetManager();
-
 
     @Override
     public void create() {

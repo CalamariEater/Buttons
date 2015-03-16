@@ -23,6 +23,7 @@ import static com.mygdx.Buttons.buttonsHelper.createButtonStyle;
  * Created by KevinJohn on 2/18/2015.
  */
 public class play implements Screen {
+
     final Buttons game;
 
     private Stage stage = new Stage();
@@ -39,6 +40,7 @@ public class play implements Screen {
     private Label.LabelStyle labelStyle = new Label.LabelStyle( font, Color.RED );
     private Label labelScore = new Label( "Score: " + playerScore, labelStyle);
     private Label labelTime = new Label( "Time: " + time, labelStyle );
+    private Label labelHighscore = new Label( "Highscore: " + mainMenu.pref.getInteger("score", 0), labelStyle);
 
     // Buttons
     Button[] buttons = new Button[9];
@@ -70,7 +72,7 @@ public class play implements Screen {
         table.debug();
 
         // Add start stuff
-        table.add(labelScore);
+        table.add(labelScore); table.add(labelHighscore);
         table.row();
         table.add(labelTime);
         table.row();
@@ -118,6 +120,7 @@ public class play implements Screen {
         // scoreEffect();
         labelScore.setText("Score: " + playerScore);
         labelTime.setText( "Time: " + time);
+        labelHighscore.setText("Highscore: " + mainMenu.pref.getInteger("score", 0));
         // ::TIME::
         // font.draw(batch, "Time: " + (time), 0, Gdx.graphics.getHeight() - 60F);
         // timeEffect();
@@ -144,6 +147,12 @@ public class play implements Screen {
 
         // isPressed = false;
         // table.layout();
+
+        // Store score
+        if ( mainMenu.pref.getInteger("score", 0) < playerScore) {
+            mainMenu.pref.putInteger( "score", playerScore );
+            mainMenu.pref.flush();
+        }
 
         stage.draw();
 
