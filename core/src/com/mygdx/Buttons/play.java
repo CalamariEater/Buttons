@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -30,14 +29,13 @@ public class play implements Screen {
     private Texture backgroundTexture = new Texture(Gdx.files.internal("circuitBoardBackground.png"));
     private Table table = new Table();
 
-    // ::TIMER::
+    // Timer
     private double time = 10;
 
     // Score
     private int playerScore = 0;
-    private SpriteBatch batch = new SpriteBatch();
+    // private SpriteBatch batch = new SpriteBatch();
     private BitmapFont font = new BitmapFont(Gdx.files.internal("digital.fnt"));
-
     private Label.LabelStyle labelStyle = new Label.LabelStyle( font, Color.RED );
     private Label labelScore = new Label( "Score: " + playerScore, labelStyle);
     private Label labelTime = new Label( "Time: " + time, labelStyle );
@@ -48,18 +46,13 @@ public class play implements Screen {
     // Flags
     private boolean lvl2 = false;
     private boolean lvl3 = false;
-    private boolean isPressed = false;
+    // private boolean isPressed = false;
 
     final Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button16.mp3"));
 
     public play (final Buttons it) {
         // TODO: Possibly. Format using Json files?
         this.game = it;
-
-
-
-        // Font
-        // font.setScale(2);
 
         // Set buttons
         for (int i = 0; i < 9; i++) {
@@ -87,7 +80,7 @@ public class play implements Screen {
         Gdx.input.setInputProcessor(stage);
         addClickListener(buttons[0]); addClickListener(buttons[1]); addClickListener(buttons[2]);
 
-        // ::TIMER::
+        // Timer
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
@@ -149,8 +142,7 @@ public class play implements Screen {
             dispose();
         }
 
-        isPressed = false;
-
+        // isPressed = false;
         // table.layout();
 
         stage.draw();

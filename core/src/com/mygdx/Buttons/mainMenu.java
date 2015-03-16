@@ -1,6 +1,5 @@
 package com.mygdx.Buttons;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
@@ -12,10 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 /**
  * Created by KevinJohn on 2/18/2015.
@@ -28,6 +25,7 @@ public class mainMenu implements Screen {
     private Stage stage = new Stage();
     private Table table = new Table();
 
+    // Buttons
     private Button button = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
     private Button button2 = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
 
@@ -46,6 +44,7 @@ public class mainMenu implements Screen {
     @Override
     public void show() {
 
+        // Sound
         final Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button16.mp3"));
 
         // Set input for button
@@ -107,7 +106,7 @@ public class mainMenu implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        // TODO: Fix resize bug ~ Buttons won't resize properly :: DKFJLDSKLFJDLFK
+        // TODO: Fix resize bug ~ Buttons won't resize properly :: DKFJLDSKLFJDLFKFDFDSFSDF :: FUUUUUUUUK
 
         stage.getViewport().update(width, height, true);
         // table.invalidateHierarchy();
