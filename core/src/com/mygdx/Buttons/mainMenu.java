@@ -3,6 +3,7 @@ package com.mygdx.Buttons;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -19,6 +20,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
  * Created by KevinJohn on 2/18/2015.
  */
 public class mainMenu implements Screen {
+
+    // TODO: ASSET MANAGER ~ Maybe
+    // Asset Manager
+    // public static AssetManager manager = new AssetManager();
 
     public static Preferences pref = Gdx.app.getPreferences("My Preferences");
 
@@ -92,7 +97,6 @@ public class mainMenu implements Screen {
 
         // Add table to stage
         stage.addActor(table);
-
 
     }
 

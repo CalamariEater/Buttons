@@ -1,6 +1,7 @@
 package com.mygdx.Buttons;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -16,6 +17,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 
+import java.math.RoundingMode;
+import java.security.Key;
+import java.text.DecimalFormat;
+
 import static com.badlogic.gdx.math.MathUtils.random;
 import static com.mygdx.Buttons.buttonsHelper.createButtonStyle;
 
@@ -24,6 +29,10 @@ import static com.mygdx.Buttons.buttonsHelper.createButtonStyle;
  */
 public class play implements Screen {
 
+    private enum GAMESTATE {RUNNING, PAUSED, GAMEOVER}
+
+    private GAMESTATE gamestate;
+
     final Buttons game;
 
     private Stage stage = new Stage();
@@ -31,7 +40,7 @@ public class play implements Screen {
     private Table table = new Table();
 
     // Timer
-    private double time = 10;
+    private double time = 10D;
 
     // Score
     private int playerScore = 0;
@@ -52,7 +61,30 @@ public class play implements Screen {
 
     final Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button16.mp3"));
 
+    // For timer output
+    public DecimalFormat df = new DecimalFormat("##.##");
+
+
+    // For Pause Menu
+    private Texture backgroundTexturePause = new Texture(Gdx.files.internal("beveledBackground.png"));
+    private Stage stagePause = new Stage();
+    private Table tablePause = new Table();
+
+    // Label
+    private Label pause = new Label("Pause", labelStyle);
+
+
+
+
+
     public play (final Buttons it) {
+
+        df.setRoundingMode(RoundingMode.DOWN);
+
+        gamestate = GAMESTATE.RUNNING;
+
+        // System.out.println(gamestate);
+
         // TODO: Possibly. Format using Json files?
         this.game = it;
 
@@ -86,14 +118,60 @@ public class play implements Screen {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                pickRandomButton();
-                time -= 1D;
-                if (lvl2 == true)
+                if (gamestate == GAMESTATE.RUNNING) {
                     pickRandomButton();
-                if (lvl3 == true)
-                    pickRandomButton();
+                    // time -= 1D;
+                    if (lvl2 == true)
+                        pickRandomButton();
+                    if (lvl3 == true)
+                        pickRandomButton();
+                }
             }
         }, 1F, 1F);
+
+
+        // Pause Screen
+        tablePause.setFillParent(true);
+        tablePause.defaults().pad(10);
+        // table.debug();
+
+        // Create button using buttonsHelper
+        Button buttonPause = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
+        Button buttonPause2 = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
+
+        // Assign stuff
+        tablePause.add(pause);
+        tablePause.row();
+        tablePause.add(buttonPause);
+        tablePause.row();
+        tablePause.add(buttonPause2);
+        tablePause.row();
+        tablePause.add(labelHighscore);
+
+        stagePause.addActor(tablePause);
+
+
+        // Set input for button
+        buttonPause.addListener( new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                soundClick.play();
+                System.out.println(gamestate);
+                gamestate = GAMESTATE.RUNNING;
+                // super.clicked(event, x, y);
+
+            }
+        });
+
+        buttonPause2.addListener( new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                soundClick.play();
+                System.out.println("Quit button PRESSED");
+                Gdx.app.exit();
+                // super.clicked(event, x, y);
+            }
+        });
 
     }
 
@@ -104,57 +182,74 @@ public class play implements Screen {
 
     @Override
     public void render(float delta) {
+
         Gdx.gl20.glClearColor( 0.0F, 0.0F, 0.0F, 0.0F);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Draw background
-        stage.getBatch().begin();
-        stage.getBatch().draw(backgroundTexture, 0, 0, stage.getWidth(),
-                stage.getHeight());
-        stage.getBatch().end();
+        // Checks
+        lvlChange();
+        isGameover();
+        isHighscore();
+
+        switch (gamestate) {
+            case RUNNING:
+
+                Gdx.input.setInputProcessor(stage);
+
+                time -= delta;
+
+                // Draw background
+                stage.getBatch().begin();
+                stage.getBatch().draw(backgroundTexture, 0, 0, stage.getWidth(),
+                        stage.getHeight());
+                stage.getBatch().end();
+
+                // Set labels
+                labelScore.setText("Score: " + playerScore);
+                labelTime.setText( "Time: " + (df.format(time)));
+                labelHighscore.setText("Highscore: " + mainMenu.pref.getInteger("score", 0));
+
+                // TESTING PAUSE
+                if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+                    gamestate = GAMESTATE.PAUSED;
+
+                stage.draw();
+                break;
+
+            case PAUSED:
+
+                Gdx.input.setInputProcessor(stagePause);
+
+                // Draw background
+                stagePause.getBatch().begin();
+                stagePause.getBatch().draw(backgroundTexturePause, 0, 0, (stagePause.getWidth()),
+                        (stagePause.getHeight()));
+                stagePause.getBatch().end();
+
+                stagePause.draw();
+                break;
+
+            case GAMEOVER:
+                game.setScreen(new gameOver(game));
+                dispose();
+                break;
+        }
+
+
 
         // batch.begin();
 
         // Draw score
         // font.draw(batch, "Score: " + playerScore, 0, Gdx.graphics.getHeight() - 35F);
         // scoreEffect();
-        labelScore.setText("Score: " + playerScore);
-        labelTime.setText( "Time: " + time);
-        labelHighscore.setText("Highscore: " + mainMenu.pref.getInteger("score", 0));
         // ::TIME::
         // font.draw(batch, "Time: " + (time), 0, Gdx.graphics.getHeight() - 60F);
         // timeEffect();
 
         // batch.end();
 
-        // Lvl check
-        if (playerScore >= 5 && lvl2 == false) {
-            table.add(buttons[3]); table.add(buttons[4]); table.add(buttons[5]); table.row();
-            addClickListener(buttons[3]); addClickListener(buttons[4]); addClickListener(buttons[5]);
-            lvl2 = true;
-        }
-
-        if (playerScore >= 10 && lvl3 == false) {
-            table.add(buttons[6]);  table.add(buttons[7]);  table.add(buttons[8]); table.row();
-            addClickListener(buttons[6]); addClickListener(buttons[7]); addClickListener(buttons[8]);
-            lvl3 = true;
-        }
-
-        if ( time <= 0 ) {
-            game.setScreen(new gameOver(game));
-            dispose();
-        }
-
         // isPressed = false;
         // table.layout();
-
-        // Store score
-        if ( mainMenu.pref.getInteger("score", 0) < playerScore) {
-            mainMenu.pref.putInteger( "score", playerScore );
-            mainMenu.pref.flush();
-        }
-
-        stage.draw();
 
     }
 
@@ -166,6 +261,7 @@ public class play implements Screen {
     @Override
     public void pause() {
         // TODO: PAUSE ALL THE THINGS
+        gamestate = GAMESTATE.PAUSED;
 
     }
 
@@ -280,6 +376,35 @@ public class play implements Screen {
             time += 1;
         else
             time += 2;
+    }
+
+    // Checks if go to next level
+    public void lvlChange () {
+        if (playerScore >= 5 && lvl2 == false) {
+            table.add(buttons[3]); table.add(buttons[4]); table.add(buttons[5]); table.row();
+            addClickListener(buttons[3]); addClickListener(buttons[4]); addClickListener(buttons[5]);
+            lvl2 = true;
+        }
+
+        if (playerScore >= 10 && lvl3 == false) {
+            table.add(buttons[6]);  table.add(buttons[7]);  table.add(buttons[8]); table.row();
+            addClickListener(buttons[6]); addClickListener(buttons[7]); addClickListener(buttons[8]);
+            lvl3 = true;
+        }
+    }
+
+    // Checks if its game over; if it is, sets gamestate to game over
+    public void isGameover () {
+        if ( time <= 0 ) {
+            gamestate = GAMESTATE.GAMEOVER;
+        }
+    }
+
+    public void isHighscore () {
+        if ( mainMenu.pref.getInteger("score", 0) < playerScore) {
+            mainMenu.pref.putInteger( "score", playerScore );
+            mainMenu.pref.flush();
+        }
     }
 
     // TODO: Maybe not. Add visual effects?

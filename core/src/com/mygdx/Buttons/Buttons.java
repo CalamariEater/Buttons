@@ -20,9 +20,6 @@ public class Buttons extends Game {
 
     // TODO: Code clean up. Seriously. Its bothering me
 
-    // TODO: ASSET MANAGER ~ Maybe
-    // Asset Manager ~ ::TO BE TESTED::
-    // public static AssetManager manager = new AssetManager();
 
     @Override
     public void create() {
