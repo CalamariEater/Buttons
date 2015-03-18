@@ -59,3 +59,17 @@ RedButtonOn
   orig: 159, 72
   offset: 0, 0
   index: -1
+MuteButtonOff
+  rotate: false
+  xy: 323, 10
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+MuteButtonOn
+  rotate: false
+  xy: 389, 10
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1

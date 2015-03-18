@@ -2,6 +2,7 @@ package com.mygdx.Buttons;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -22,7 +23,7 @@ public class buttonsHelper {
         buttonSkin = new Skin();
         buttonSkin.addRegions(buttonAtlas);
         buttonStyle = new Button.ButtonStyle();
-        if (inverse == true) {
+        if (inverse) {
             buttonStyle.up = buttonSkin.getDrawable(On);
             buttonStyle.down = buttonSkin.getDrawable(Off);
         }

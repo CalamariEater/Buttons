@@ -35,6 +35,9 @@ public class play implements Screen {
 
     final Buttons game;
 
+
+
+    // ****** RUNNING ******
     private Stage stage = new Stage();
     private Texture backgroundTexture = new Texture(Gdx.files.internal("circuitBoardBackground.png"));
     private Table table = new Table();
@@ -44,12 +47,14 @@ public class play implements Screen {
 
     // Score
     private int playerScore = 0;
+
     // private SpriteBatch batch = new SpriteBatch();
     private BitmapFont font = new BitmapFont(Gdx.files.internal("digital.fnt"));
     private Label.LabelStyle labelStyle = new Label.LabelStyle( font, Color.RED );
     private Label labelScore = new Label( "Score: " + playerScore, labelStyle);
     private Label labelTime = new Label( "Time: " + time, labelStyle );
     private Label labelHighscore = new Label( "Highscore: " + mainMenu.pref.getInteger("score", 0), labelStyle);
+
 
     // Buttons
     Button[] buttons = new Button[9];
@@ -65,7 +70,8 @@ public class play implements Screen {
     public DecimalFormat df = new DecimalFormat("##.##");
 
 
-    // For Pause Menu
+
+    // ****** PAUSED ******
     private Texture backgroundTexturePause = new Texture(Gdx.files.internal("beveledBackground.png"));
     private Stage stagePause = new Stage();
     private Table tablePause = new Table();
@@ -73,10 +79,12 @@ public class play implements Screen {
     // Label
     private Label pause = new Label("Pause", labelStyle);
 
+    // Muted
+    public boolean muted = false;
 
 
 
-
+    // ****** PROGRAM START ******
     public play (final Buttons it) {
 
         df.setRoundingMode(RoundingMode.DOWN);
@@ -90,7 +98,7 @@ public class play implements Screen {
 
         // Set buttons
         for (int i = 0; i < 9; i++) {
-            buttons[i] = buttonsHelper.createButton("GreenButtonOff", "GreenButtonOn", false);
+            buttons[i] = buttonsHelper.createButton( "GreenButtonOff", "GreenButtonOn", false);
             System.out.println("Index: " + i);
         }
 
@@ -136,43 +144,55 @@ public class play implements Screen {
         // table.debug();
 
         // Create button using buttonsHelper
-        Button buttonPause = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
-        Button buttonPause2 = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
+        Button buttonResume = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
+        Button buttonQuit = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
+        final Button buttonMute = buttonsHelper.createButton("MuteButtonOff", "MuteButtonOn", false);
 
         // Assign stuff
         tablePause.add(pause);
         tablePause.row();
-        tablePause.add(buttonPause);
+        tablePause.add(buttonResume);
         tablePause.row();
-        tablePause.add(buttonPause2);
+        tablePause.add(buttonQuit);
         tablePause.row();
         tablePause.add(labelHighscore);
+        tablePause.row();
+        tablePause.add(buttonMute);
 
         stagePause.addActor(tablePause);
 
 
         // Set input for button
-        buttonPause.addListener( new ClickListener() {
+        buttonResume.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                soundClick.play();
-                System.out.println(gamestate);
+                isMute();
                 gamestate = GAMESTATE.RUNNING;
-                // super.clicked(event, x, y);
-
             }
         });
 
-        buttonPause2.addListener( new ClickListener() {
+        buttonQuit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                soundClick.play();
+                isMute();
                 System.out.println("Quit button PRESSED");
                 Gdx.app.exit();
-                // super.clicked(event, x, y);
             }
         });
 
+        buttonMute.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!muted) {
+                    muted = true;
+                    buttonMute.setStyle(createButtonStyle("MuteButtonOff", "MuteButtonOn", true));
+                }
+                else {
+                    muted = false;
+                    buttonMute.setStyle(createButtonStyle("MuteButtonOff", "MuteButtonOn", false));
+                }
+            }
+        });
     }
 
     @Override
@@ -287,7 +307,7 @@ public class play implements Screen {
         button.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                soundClick.play();
+                isMute();
                 // isPressed = true;
                 System.out.println("+");
 
@@ -308,7 +328,7 @@ public class play implements Screen {
         button.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                soundClick.play();
+                isMute();
                 // isPressed = true;
                 System.out.println("-");
 
@@ -405,6 +425,10 @@ public class play implements Screen {
             mainMenu.pref.putInteger( "score", playerScore );
             mainMenu.pref.flush();
         }
+    }
+
+    public void isMute () {
+        if (!muted) soundClick.play();
     }
 
     // TODO: Maybe not. Add visual effects?
