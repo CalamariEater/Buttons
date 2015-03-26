@@ -28,6 +28,8 @@ public class buttonsHelper {
             buttonStyle.down = buttonSkin.getDrawable(Off);
         }
         else {
+            buttonStyle.pressedOffsetY = -4;
+            buttonStyle.pressedOffsetX = -4;
             buttonStyle.up = buttonSkin.getDrawable(Off);
             buttonStyle.down = buttonSkin.getDrawable(On);
         }

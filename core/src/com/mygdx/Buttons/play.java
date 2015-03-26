@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -18,7 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 
 import java.math.RoundingMode;
-import java.security.Key;
 import java.text.DecimalFormat;
 
 import static com.badlogic.gdx.math.MathUtils.random;
@@ -46,9 +48,9 @@ public class play implements Screen {
     private double time = 10D;
 
     // Score
-    private int playerScore = 0;
+    public static int playerScore = 0;
 
-    // private SpriteBatch batch = new SpriteBatch();
+    private SpriteBatch batch = new SpriteBatch();
     private BitmapFont font = new BitmapFont(Gdx.files.internal("digital.fnt"));
     private Label.LabelStyle labelStyle = new Label.LabelStyle( font, Color.RED );
     private Label labelScore = new Label( "Score: " + playerScore, labelStyle);
@@ -62,7 +64,8 @@ public class play implements Screen {
     // Flags
     private boolean lvl2 = false;
     private boolean lvl3 = false;
-    // private boolean isPressed = false;
+    private boolean isPressed = false;
+    private boolean isBadPressed = false;
 
     final Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button16.mp3"));
 
@@ -82,7 +85,7 @@ public class play implements Screen {
     // Muted
     public boolean muted = false;
 
-
+    // ****** Visual Cues ****** TESTING
 
     // ****** PROGRAM START ******
     public play (final Buttons it) {
@@ -133,6 +136,8 @@ public class play implements Screen {
                         pickRandomButton();
                     if (lvl3 == true)
                         pickRandomButton();
+                    isPressed = false;
+                    isBadPressed = false;
                 }
             }
         }, 1F, 1F);
@@ -234,6 +239,11 @@ public class play implements Screen {
                     gamestate = GAMESTATE.PAUSED;
 
                 stage.draw();
+
+                batch.begin();
+                displayPlusOne();
+                batch.end();
+
                 break;
 
             case PAUSED:
@@ -302,13 +312,16 @@ public class play implements Screen {
         backgroundTexture.dispose();
     }
 
-    // Helper functions
+    // ****** Helper functions ******
     public void addClickListener ( final Button button ) {
         button.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 isMute();
-                // isPressed = true;
+                // For visual cues
+                isPressed = true;
+                isBadPressed = false;
+
                 System.out.println("+");
 
                 // Score add
@@ -329,7 +342,12 @@ public class play implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 isMute();
-                // isPressed = true;
+
+                // For visual cues
+
+                isBadPressed = true;
+                isPressed = false;
+
                 System.out.println("-");
 
                 time -= 1;
@@ -342,7 +360,7 @@ public class play implements Screen {
         });
     }
 
-    // Picks a random index
+    // Picks a random index in terms of the level
     public int randomNumber ( ) {
         int i = 0;
         if ( lvl2 ) {
@@ -428,7 +446,30 @@ public class play implements Screen {
     }
 
     public void isMute () {
-        if (!muted) soundClick.play();
+        if (!muted) {
+            soundClick.play();
+        }
+    }
+
+    // Displays boot leg visual plus ones
+    public void displayPlusOne () {
+        if ( isPressed ) {
+            Vector2 loc = getStageLocation(labelTime);
+            Vector2 loc2 = getStageLocation(labelScore);
+            font.setColor(Color.YELLOW);
+            font.draw(batch, "+1", loc.x, loc.y);
+            font.draw(batch, "+1", loc2.x, loc2.y);
+        }
+        if ( isBadPressed ) {
+            Vector2 loc = getStageLocation(labelTime);
+            font.setColor(Color.RED);
+            font.draw(batch, "-1", loc.x, loc.y);
+        }
+    }
+
+    // Gets bottom left pos of actor passed
+    public static Vector2 getStageLocation(Actor actor) {
+        return actor.localToStageCoordinates(new Vector2(actor.getWidth() + 3 , actor.getHeight()));
     }
 
     // TODO: Maybe not. Add visual effects?

@@ -14,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import static com.mygdx.Buttons.play.*;
+
 /**
  * Created by KevinJohn on 2/18/2015.
  */
@@ -31,6 +33,7 @@ public class gameOver implements Screen {
     // private Skin skin = new Skin(Gdx.files.internal("SkinTest.json"));
     private Label gameOver = new Label("Game Over", labelStyle);
     private Label labelHighscore = new Label( "Highscore: " + mainMenu.pref.getInteger("score", 0), labelStyle);
+    private Label labelScore = new Label( "Score: " + playerScore, labelStyle);
 
 
     public gameOver (final Buttons it) {
@@ -57,6 +60,8 @@ public class gameOver implements Screen {
         table.add(button);
         table.row();
         table.add(button2);
+        table.row();
+        table.add(labelScore);
         table.row();
         table.add(labelHighscore);
 

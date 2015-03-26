@@ -49,10 +49,13 @@ public class mainMenu implements Screen {
         game = it;
     }
 
-
-
     @Override
     public void show() {
+
+        /*
+        if (pref.getBoolean("First Play", true))
+            game.setScreen(new firstPlay(game));
+        */
 
         // Sound
         final Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button16.mp3"));
@@ -117,7 +120,7 @@ public class mainMenu implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        // TODO: Fix resize bug ~ Buttons won't resize properly :: DKFJLDSKLFJDLFKFDFDSFSDF :: FUUUUUUUUK
+        // TODO: Fix resize bug ~ Buttons won't resize properly :: DKFJLDSKLFJDLFKFDFDSFSDF :: FUUUUUUUUK :: WHYYYYYYYYYYYYYYYYY
 
         stage.getViewport().update(width, height, true);
         // table.invalidateHierarchy();
