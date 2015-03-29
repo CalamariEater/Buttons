@@ -3,7 +3,6 @@ package com.mygdx.Buttons;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -109,12 +108,9 @@ public class mainMenu implements Screen {
         Gdx.gl20.glClearColor( 0.0F, 0.0F, 0.0F, 0.0F);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        stage.getBatch().begin();
-        stage.getBatch().draw(backgroundTexture, 0, 0, stage.getWidth(),
-                stage.getHeight());
-        stage.getBatch().end();
+        drawBackground();
 
-        stage.act(delta);
+        // stage.act(delta);
         stage.draw();
     }
 
@@ -149,5 +145,12 @@ public class mainMenu implements Screen {
         // TODO: DISPOSE ALL THE THINGS
         backgroundTexture.dispose();
         stage.dispose();
+    }
+
+    public void drawBackground () {
+        stage.getBatch().begin();
+        stage.getBatch().draw(backgroundTexture, 0, 0, stage.getWidth(),
+                stage.getHeight());
+        stage.getBatch().end();
     }
 }
