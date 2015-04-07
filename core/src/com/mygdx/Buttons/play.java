@@ -92,12 +92,8 @@ public class play implements Screen {
     public play (final Buttons it) {
 
         playerScore = 0;
-
         df.setRoundingMode(RoundingMode.DOWN);
-
         gamestate = GAMESTATE.RUNNING;
-
-        // System.out.println(gamestate);
 
         // TODO: Possibly. Format using Json files?
         this.game = it;
@@ -207,7 +203,7 @@ public class play implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -232,9 +228,16 @@ public class play implements Screen {
         Timer.instance().clear();
         stage.dispose();
         backgroundTexture.dispose();
+        backgroundTexturePause.dispose();
+        stagePause.dispose();
+        soundClick.dispose();
+        batch.dispose();
+        font.dispose();
     }
 
-    // ****** Helper functions ******
+    /*****************************************************************
+     * Helper Functions
+     *****************************************************************/
     public void addClickListener ( final Button button ) {
         button.addListener( new ClickListener() {
             @Override

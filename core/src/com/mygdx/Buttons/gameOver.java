@@ -14,12 +14,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import static com.mygdx.Buttons.play.*;
+import static com.mygdx.Buttons.play.playerScore;
 
 /**
  * Created by KevinJohn on 2/18/2015.
  */
 public class gameOver implements Screen {
+
+    // TODO: LOCATE MEMORY BUG
+    // TODO: MAKE BUTTONS BIGGERz
 
     final Buttons game;
 
@@ -75,6 +78,7 @@ public class gameOver implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 soundClick.play();
                 System.out.println("BUTTON PRESSED!");
+                dispose();
                 game.setScreen(new play(game));
                 // super.clicked(event, x, y);
 
@@ -114,7 +118,6 @@ public class gameOver implements Screen {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
-
     }
 
     @Override
@@ -129,13 +132,13 @@ public class gameOver implements Screen {
 
     @Override
     public void hide() {
-        dispose();
 
     }
 
     @Override
     public void dispose() {
-        // backgroundTexture.dispose();
+        backgroundTexture.dispose();
         stage.dispose();
+        font.dispose();
     }
 }

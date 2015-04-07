@@ -1,17 +1,6 @@
 package com.mygdx.Buttons;
 
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.Game;
 
 public class Buttons extends Game {
 
@@ -31,8 +20,6 @@ public class Buttons extends Game {
 
     @Override
     public void resize(int width, int height) {
-        // stage.getViewport().update(width, height, true);
-        // viewport.update(width, height, true);
     }
 
     @Override

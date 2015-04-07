@@ -66,7 +66,7 @@ public class mainMenu implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 soundClick.play();
-                System.out.println(".");
+                dispose();
                 game.setScreen(new play(game));
                 // super.clicked(event, x, y);
             }
@@ -76,7 +76,6 @@ public class mainMenu implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                soundClick.play();
-                System.out.println(".");
                 Gdx.app.exit();
                 // super.clicked(event, x, y);
 
@@ -136,8 +135,6 @@ public class mainMenu implements Screen {
 
     @Override
     public void hide() {
-        dispose();
-
     }
 
     @Override
@@ -145,6 +142,7 @@ public class mainMenu implements Screen {
         // TODO: DISPOSE ALL THE THINGS
         backgroundTexture.dispose();
         stage.dispose();
+        font.dispose();
     }
 
     public void drawBackground () {
