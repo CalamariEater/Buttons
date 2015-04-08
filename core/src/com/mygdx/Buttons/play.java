@@ -60,6 +60,12 @@ public class play implements Screen {
 
     // Buttons
     Button[] buttons = new Button[9];
+    float buttonWidth = 212;
+    float buttonHeight = 96;
+    private Button.ButtonStyle buttonStyleGreen = createButtonStyle("GreenButtonOff", "GreenButtonOn", false);
+    private Button.ButtonStyle buttonStyleRed = createButtonStyle("RedButtonOff", "RedButtonOn", false);
+    private Button.ButtonStyle buttonStyleGreenInverse = createButtonStyle("GreenButtonOff", "GreenButtonOn", true);
+    private Button.ButtonStyle buttonStyleRedInverse = createButtonStyle("RedButtonOff", "RedButtonOn", true);
 
     // Flags
     private boolean lvl2 = false;
@@ -91,6 +97,7 @@ public class play implements Screen {
      ***************************************************************************************************************/
     public play (final Buttons it) {
 
+        // font.setScale(2);
         playerScore = 0;
         df.setRoundingMode(RoundingMode.DOWN);
         gamestate = GAMESTATE.RUNNING;
@@ -111,14 +118,14 @@ public class play implements Screen {
         // Set Table
         table.defaults().pad(10);
         table.setFillParent(true);
-        // table.debug();
+        table.debug();
 
         // Add start stuff
         table.add(labelScore); table.add(labelHighscore);
         table.row();
         table.add(labelTime);
         table.row();
-        table.add(buttons[0]);  table.add(buttons[1]); table.add(buttons[2]); table.row();
+        table.add(buttons[0]).size(buttonWidth, buttonHeight);  table.add(buttons[1]).size(buttonWidth, buttonHeight); table.add(buttons[2]).size(buttonWidth, buttonHeight); table.row();
 
         // Set input for button
         Gdx.input.setInputProcessor(stage);
@@ -256,7 +263,7 @@ public class play implements Screen {
 
                 // Disable button
                 button.setTouchable(Touchable.disabled);
-                button.setStyle(createButtonStyle("GreenButtonOff", "GreenButtonOn", true));
+                button.setStyle(buttonStyleGreenInverse);
                 button.clearListeners();
             }
         });
@@ -279,7 +286,7 @@ public class play implements Screen {
 
                 // Disable button
                 button.setTouchable(Touchable.disabled);
-                button.setStyle(createButtonStyle("RedButtonOff", "RedButtonOn", true));
+                button.setStyle(buttonStyleRedInverse);
                 button.clearListeners();
             }
         });
@@ -305,7 +312,7 @@ public class play implements Screen {
     public void setTouchable(int index) {
         if ( 0 == buttons[index].getListeners().size ) {
             buttons[index].setTouchable(Touchable.enabled);
-            buttons[index].setStyle(createButtonStyle("GreenButtonOff", "GreenButtonOn", false));
+            buttons[index].setStyle(buttonStyleGreen);
             addClickListener(buttons[index]);
             System.out.println("added a click listener");
         }
@@ -316,7 +323,7 @@ public class play implements Screen {
     public void setBadButton (int index) {
         if ( 0 == buttons[index].getListeners().size ) {
             buttons[index].setTouchable(Touchable.enabled);
-            buttons[index].setStyle(createButtonStyle("RedButtonOff", "RedButtonOn", false));
+            buttons[index].setStyle(buttonStyleRed);
             addBadClickListener(buttons[index]);
             System.out.println("added a BAD click listener");
         }
@@ -344,13 +351,13 @@ public class play implements Screen {
     // Checks if go to next level
     public void lvlChange () {
         if (playerScore >= 5 && lvl2 == false) {
-            table.add(buttons[3]); table.add(buttons[4]); table.add(buttons[5]); table.row();
+            table.add(buttons[3]).size(buttonWidth, buttonHeight); table.add(buttons[4]).size(buttonWidth, buttonHeight); table.add(buttons[5]).size(buttonWidth, buttonHeight); table.row();
             addClickListener(buttons[3]); addClickListener(buttons[4]); addClickListener(buttons[5]);
             lvl2 = true;
         }
 
         if (playerScore >= 10 && lvl3 == false) {
-            table.add(buttons[6]);  table.add(buttons[7]);  table.add(buttons[8]); table.row();
+            table.add(buttons[6]).size(buttonWidth, buttonHeight);  table.add(buttons[7]).size(buttonWidth, buttonHeight);  table.add(buttons[8]).size(buttonWidth, buttonHeight); table.row();
             addClickListener(buttons[6]); addClickListener(buttons[7]); addClickListener(buttons[8]);
             lvl3 = true;
         }
@@ -406,10 +413,16 @@ public class play implements Screen {
 
     public void setLabels () {
         labelScore.setText("Score: " + playerScore);
-        labelTime.setText( "Time: " + (df.format(time)));
         labelHighscore.setText("Highscore: " + mainMenu.pref.getInteger("score", 0));
-    }
 
+        // Fluctuate between yellow and red to warn player of low time.
+        if (time > 5F) {
+            font.setColor(Color.YELLOW);
+            labelTime.setText( "Time: " + (df.format(time)));
+        }
+        else
+            labelTime.setText( "Time: " + (df.format(time)));
+    }
 
     /************************************************************************************************************
      * Creates pause

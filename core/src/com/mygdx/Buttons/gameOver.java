@@ -38,6 +38,8 @@ public class gameOver implements Screen {
     private Label labelHighscore = new Label( "Highscore: " + mainMenu.pref.getInteger("score", 0), labelStyle);
     private Label labelScore = new Label( "Score: " + playerScore, labelStyle);
 
+    float buttonWidth = 318;
+    float buttonHeight = 144;
 
     public gameOver (final Buttons it) {
         game = it;
@@ -46,12 +48,13 @@ public class gameOver implements Screen {
     @Override
     public void show() {
 
+        font.setScale(2);
         final Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button16.mp3"));
 
         // Set table up
         table.setFillParent(true);
         table.defaults().pad(10);
-        // table.debug();
+        table.debug();
 
         // Create button using buttonsHelper
         Button button = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
@@ -60,9 +63,9 @@ public class gameOver implements Screen {
         // Assign stuff
         table.add(gameOver);
         table.row();
-        table.add(button);
+        table.add(button).size(buttonWidth, buttonHeight);
         table.row();
-        table.add(button2);
+        table.add(button2).size(buttonWidth, buttonHeight);
         table.row();
         table.add(labelScore);
         table.row();

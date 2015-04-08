@@ -33,8 +33,11 @@ public class mainMenu implements Screen {
     private Table table = new Table();
 
     // Buttons
+    public buttonsHelper buttonsHelper = new buttonsHelper();
     private Button button = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
     private Button button2 = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
+    float buttonWidth = 318;
+    float buttonHeight = 144;
 
     // Labels
     private BitmapFont font = new BitmapFont(Gdx.files.internal("digital.fnt"));
@@ -57,6 +60,7 @@ public class mainMenu implements Screen {
         */
 
         // Sound
+        font.setScale(2);
         final Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button16.mp3"));
 
         // Set input for button
@@ -85,18 +89,19 @@ public class mainMenu implements Screen {
         // Set table up
         table.setFillParent(true);
         table.defaults().pad(10);
-        // table.debug();
+        table.debug();
 
         // Add objects to table
         table.add(title);
         table.row();
-        table.add(button);
+        table.add(button).size(buttonWidth, buttonHeight);
         table.row();
-        table.add(button2);
+        table.add(button2).size(buttonWidth, buttonHeight);
         table.row();
         table.add(highscoreLabel);
 
         // Add table to stage
+        // stage.getViewport().setWorldSize(Gdx.graphics.getWidth() - 50F, Gdx.graphics.getHeight() - 50F);
         stage.addActor(table);
 
     }

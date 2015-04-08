@@ -2,11 +2,8 @@ package com.mygdx.Buttons;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 /**
  * Created by KevinJohn on 2/12/2015.
@@ -18,11 +15,14 @@ public class buttonsHelper {
     public static Button.ButtonStyle buttonStyle;
     public static Skin buttonSkin;
 
-    public static Button.ButtonStyle createButtonStyle ( String Off, String On, boolean inverse ){
+    public buttonsHelper (){
         buttonAtlas = new TextureAtlas(Gdx.files.internal("Buttons.pack"), false);
+        buttonStyle = new Button.ButtonStyle();
         buttonSkin = new Skin();
         buttonSkin.addRegions(buttonAtlas);
-        buttonStyle = new Button.ButtonStyle();
+    }
+
+    public static Button.ButtonStyle createButtonStyle(String Off, String On, boolean inverse){
         if (inverse) {
             buttonStyle.up = buttonSkin.getDrawable(On);
             buttonStyle.down = buttonSkin.getDrawable(Off);
