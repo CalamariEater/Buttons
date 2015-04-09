@@ -1,9 +1,11 @@
 package com.mygdx.Buttons;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 /**
  * Created by KevinJohn on 2/12/2015.
@@ -11,9 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
  */
 public class buttonsHelper {
 
+    // TODO: Possibly. Format using Json files?
+    // TODO: Make button press down ezier to see
+
     public TextureAtlas buttonAtlas;
-    // public static Button.ButtonStyle buttonStyle;
     public Skin buttonSkin;
+
+    private static BitmapFont font = new BitmapFont(Gdx.files.internal("digital.fnt"));
+    private static BitmapFont fontLarge = new BitmapFont(Gdx.files.internal("digital.fnt"));
 
     private static Button.ButtonStyle buttonStyleGreen = new Button.ButtonStyle();
     private static Button.ButtonStyle buttonStyleGreenInverse = new Button.ButtonStyle();
@@ -22,6 +29,7 @@ public class buttonsHelper {
     private static Button.ButtonStyle buttonStyleGray = new Button.ButtonStyle();
     private static Button.ButtonStyle buttonStyleMute = new Button.ButtonStyle();
     private static Button.ButtonStyle buttonStyleMuteInverse = new Button.ButtonStyle();
+    private static TextButton.TextButtonStyle textButtonStyleGray = new TextButton.TextButtonStyle();
 
     public buttonsHelper (){
         buttonAtlas = new TextureAtlas(Gdx.files.internal("Buttons.pack"));
@@ -58,6 +66,14 @@ public class buttonsHelper {
         // Create buttonStyleMuteInverse
         buttonStyleMuteInverse.up = buttonSkin.getDrawable("MuteButtonOn");
         buttonStyleMuteInverse.down = buttonSkin.getDrawable("MuteButtonOff");
+
+        // Create textButtonStyleGray
+        textButtonStyleGray.up = buttonSkin.getDrawable("GrayButtonOff");
+        textButtonStyleGray.down = buttonSkin.getDrawable("GrayButtonOn");
+        textButtonStyleGray.font = font;
+
+        // Scale fontLarge
+        fontLarge.setScale(2);
     }
 
     public static Button.ButtonStyle getButtonStyleGreen() { return buttonStyleGreen; }
@@ -73,6 +89,12 @@ public class buttonsHelper {
     public static Button.ButtonStyle getButtonStyleMute() { return buttonStyleMute; }
 
     public static Button.ButtonStyle getButtonStyleMuteInverse() { return buttonStyleMuteInverse; }
+
+    public static TextButton.TextButtonStyle getTextButtonStyleGray() { return textButtonStyleGray; }
+
+    public static BitmapFont getFont() { return font; }
+
+    public static BitmapFont getFontLarge() { return fontLarge; }
 
     /*
     public static Button.ButtonStyle setButtonStyle(String Off, String On){
@@ -117,8 +139,7 @@ public class buttonsHelper {
     }
 
     // Disposes stuff
-    public static void buttonDispose() {
-        // buttonAtlas.dispose();
-        // buttonSkin.dispose();
+    public void buttonDispose() {
+        this.buttonAtlas.dispose();
     }
 }

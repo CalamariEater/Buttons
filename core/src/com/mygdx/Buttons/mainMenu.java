@@ -7,12 +7,11 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 /**
@@ -34,16 +33,15 @@ public class mainMenu implements Screen {
 
     // Buttons
     public buttonsHelper buttonsHelper = new buttonsHelper();
-    private Button button = new Button( buttonsHelper.getButtonStyleGray() );
-    private Button button2 = new Button( buttonsHelper.getButtonStyleGray() );
+    private TextButton button = new TextButton("Play", buttonsHelper.getTextButtonStyleGray());
+    private TextButton button2 = new TextButton("Quit", buttonsHelper.getTextButtonStyleGray());
     float buttonWidth = 318;
     float buttonHeight = 144;
 
     // Labels
-    private BitmapFont font = new BitmapFont(Gdx.files.internal("digital.fnt"));
-    private Label.LabelStyle labelStyle = new Label.LabelStyle( font, Color.RED );
-    // private Skin skin = new Skin(Gdx.files.internal("SkinTest.json"));
-    private Label title = new Label("Buttons", labelStyle);
+    private Label.LabelStyle labelStyle = new Label.LabelStyle( buttonsHelper.getFont(), Color.RED );
+    private Label.LabelStyle labelStyleLarge = new Label.LabelStyle( buttonsHelper.getFontLarge(), Color.RED );
+    private Label title = new Label("Buttons", labelStyleLarge);
 
     private Label highscoreLabel = new Label("Highscore: " + pref.getInteger("score", 0), labelStyle );
 
@@ -54,13 +52,7 @@ public class mainMenu implements Screen {
     @Override
     public void show() {
 
-        /*
-        if (pref.getBoolean("First Play", true))
-            game.setScreen(new firstPlay(game));
-        */
-
         // Sound
-        font.setScale(2);
         final Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button16.mp3"));
 
         // Set input for button
@@ -89,7 +81,7 @@ public class mainMenu implements Screen {
         // Set table up
         table.setFillParent(true);
         table.defaults().pad(10);
-        table.debug();
+        // table.debug();
 
         // Add objects to table
         table.add(title);
@@ -120,7 +112,7 @@ public class mainMenu implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        // TODO: Fix resize bug ~ Buttons won't resize properly :: DKFJLDSKLFJDLFKFDFDSFSDF :: FUUUUUUUUK :: WHYYYYYYYYYYYYYYYYY
+        // TODO: Resize bug fixed?
 
         stage.getViewport().update(width, height, true);
         // table.invalidateHierarchy();
@@ -144,10 +136,9 @@ public class mainMenu implements Screen {
 
     @Override
     public void dispose() {
-        // TODO: DISPOSE ALL THE THINGS
+        // TODO: HIDE ALL THE THINGS
         backgroundTexture.dispose();
         stage.dispose();
-        font.dispose();
     }
 
     public void drawBackground () {

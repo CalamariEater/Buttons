@@ -6,12 +6,11 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import static com.mygdx.Buttons.play.playerScore;
@@ -21,20 +20,21 @@ import static com.mygdx.Buttons.play.playerScore;
  */
 public class gameOver implements Screen {
 
-    // TODO: LOCATE MEMORY BUG
-    // TODO: MAKE BUTTONS BIGGERz
-
     final Buttons game;
 
     private Texture backgroundTexture = new Texture(Gdx.files.internal("beveledBackground.png"));
     private Stage stage = new Stage();
     private Table table = new Table();
 
+    // Buttons
+    private TextButton button = new TextButton("Retry", buttonsHelper.getTextButtonStyleGray());
+    private TextButton button2 = new TextButton("Quit", buttonsHelper.getTextButtonStyleGray());
+
     // Label
-    private BitmapFont font = new BitmapFont(Gdx.files.internal("digital.fnt"));
-    private Label.LabelStyle labelStyle = new Label.LabelStyle( font, Color.RED );
+    private Label.LabelStyle labelStyle = new Label.LabelStyle( buttonsHelper.getFont(), Color.RED );
+    private Label.LabelStyle labelStyleLarge = new Label.LabelStyle( buttonsHelper.getFontLarge(), Color.RED );
     // private Skin skin = new Skin(Gdx.files.internal("SkinTest.json"));
-    private Label gameOver = new Label("Game Over", labelStyle);
+    private Label gameOver = new Label("Game Over", labelStyleLarge);
     private Label labelHighscore = new Label( "Highscore: " + mainMenu.pref.getInteger("score", 0), labelStyle);
     private Label labelScore = new Label( "Score: " + playerScore, labelStyle);
 
@@ -48,17 +48,12 @@ public class gameOver implements Screen {
     @Override
     public void show() {
 
-        font.setScale(2);
         final Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button16.mp3"));
 
         // Set table up
         table.setFillParent(true);
         table.defaults().pad(10);
-        table.debug();
-
-        // Create button using buttonsHelper
-        Button button = new Button( buttonsHelper.getButtonStyleGray() );
-        Button button2 = new Button( buttonsHelper.getButtonStyleGray() );
+        // table.debug();
 
         // Assign stuff
         table.add(gameOver);
@@ -142,6 +137,5 @@ public class gameOver implements Screen {
     public void dispose() {
         backgroundTexture.dispose();
         stage.dispose();
-        font.dispose();
     }
 }

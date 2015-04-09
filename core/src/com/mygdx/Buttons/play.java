@@ -7,7 +7,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -30,13 +29,7 @@ import static com.badlogic.gdx.math.MathUtils.random;
  */
 public class play implements Screen {
 
-    private enum GAMESTATE {RUNNING, PAUSED, GAMEOVER}
-
-    private GAMESTATE gamestate;
-
     final Buttons game;
-
-
 
     // ****** RUNNING ******
     private Stage stage = new Stage();
@@ -44,16 +37,16 @@ public class play implements Screen {
     private Table table = new Table();
 
     // Timer
-    private double time = 10D;
+    private double time = 10F;
+    private Label.LabelStyle labelStyleTime = new Label.LabelStyle( buttonsHelper.getFont(), Color.RED );
+    private Label labelTime = new Label( "Time: " + time, labelStyleTime );
 
     // Score
     public static int playerScore;
 
     private SpriteBatch batch = new SpriteBatch();
-    private BitmapFont font = new BitmapFont(Gdx.files.internal("digital.fnt"));
-    private Label.LabelStyle labelStyle = new Label.LabelStyle( font, Color.RED );
+    private Label.LabelStyle labelStyle = new Label.LabelStyle( buttonsHelper.getFont(), Color.RED );
     private Label labelScore = new Label( "Score: " + playerScore, labelStyle);
-    private Label labelTime = new Label( "Time: " + time, labelStyle );
     private Label labelHighscore = new Label( "Highscore: " + mainMenu.pref.getInteger("score", 0), labelStyle);
 
 
@@ -61,14 +54,13 @@ public class play implements Screen {
     Button[] buttons = new Button[9];
     float buttonWidth = 212;
     float buttonHeight = 96;
-    //^ Issue here; the last setButtonStyle sets the whole shebang. Sharing buttonStyle instance; pointer to buttonsHelper style.
-
 
     // Flags
     private boolean lvl2 = false;
     private boolean lvl3 = false;
     private boolean isPressed = false;
     private boolean isBadPressed = false;
+    private boolean fluctuate = false;
 
     final Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button16.mp3"));
 
@@ -81,7 +73,8 @@ public class play implements Screen {
     private Table tablePause = new Table();
 
     // Label
-    private Label pause = new Label("Pause", labelStyle);
+    private Label.LabelStyle labelStyleLarge = new Label.LabelStyle( buttonsHelper.getFontLarge(), Color.RED );
+    private Label pause = new Label("Paused", labelStyleLarge);
 
     // Muted
     public boolean muted = false;
@@ -94,12 +87,16 @@ public class play implements Screen {
      ***************************************************************************************************************/
     public play (final Buttons it) {
 
-        // font.setScale(2);
-        playerScore = 0;
-        df.setRoundingMode(RoundingMode.DOWN);
-        gamestate = GAMESTATE.RUNNING;
+        PauseMenu();
+        setFlags();
 
-        // TODO: Possibly. Format using Json files?
+        // Reset current player score
+        playerScore = 0;
+
+        df.setRoundingMode(RoundingMode.DOWN);
+
+        Buttons.gamestate = Buttons.GAMESTATE.RUNNING;
+
         this.game = it;
 
         // Set buttons
@@ -115,7 +112,7 @@ public class play implements Screen {
         // Set Table
         table.defaults().pad(10);
         table.setFillParent(true);
-        table.debug();
+        // table.debug();
 
         // Add start stuff
         table.add(labelScore); table.add(labelHighscore);
@@ -132,15 +129,16 @@ public class play implements Screen {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                if (gamestate == GAMESTATE.RUNNING) {
+                if (Buttons.gamestate == Buttons.GAMESTATE.RUNNING) {
                     pickRandomButton();
                     // time -= 1D;
-                    if (lvl2 == true)
+                    if (lvl2)
                         pickRandomButton();
-                    if (lvl3 == true)
+                    if (lvl3)
                         pickRandomButton();
                     isPressed = false;
                     isBadPressed = false;
+                    fluctuate = !fluctuate;
                 }
             }
         }, 1F, 1F);
@@ -164,7 +162,7 @@ public class play implements Screen {
         isGameover();
         isHighscore();
 
-        switch (gamestate) {
+        switch (Buttons.gamestate) {
             case RUNNING:
 
                 Gdx.input.setInputProcessor(stage);
@@ -176,7 +174,7 @@ public class play implements Screen {
 
                 // TESTING PAUSE
                 if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
-                    gamestate = GAMESTATE.PAUSED;
+                    Buttons.gamestate = Buttons.GAMESTATE.PAUSED;
 
                 stage.draw();
 
@@ -213,8 +211,7 @@ public class play implements Screen {
     @Override
     public void pause() {
         // TODO: PAUSE ALL THE THINGS
-        gamestate = GAMESTATE.PAUSED;
-
+        Buttons.gamestate = Buttons.GAMESTATE.PAUSED;
     }
 
     @Override
@@ -227,6 +224,7 @@ public class play implements Screen {
 
     }
 
+
     @Override
     public void dispose() {
         Timer.instance().clear();
@@ -236,7 +234,6 @@ public class play implements Screen {
         stagePause.dispose();
         soundClick.dispose();
         batch.dispose();
-        font.dispose();
     }
 
     /*****************************************************************
@@ -291,7 +288,7 @@ public class play implements Screen {
 
     // Picks a random index in terms of the level
     public int randomNumber ( ) {
-        int i = 0;
+        int i;
         if ( lvl2 ) {
             i = Math.round(random(5));
         }
@@ -347,13 +344,13 @@ public class play implements Screen {
 
     // Checks if go to next level
     public void lvlChange () {
-        if (playerScore >= 5 && lvl2 == false) {
+        if (playerScore >= 5 && !lvl2) {
             table.add(buttons[3]).size(buttonWidth, buttonHeight); table.add(buttons[4]).size(buttonWidth, buttonHeight); table.add(buttons[5]).size(buttonWidth, buttonHeight); table.row();
             addClickListener(buttons[3]); addClickListener(buttons[4]); addClickListener(buttons[5]);
             lvl2 = true;
         }
 
-        if (playerScore >= 10 && lvl3 == false) {
+        if (playerScore >= 10 && !lvl3) {
             table.add(buttons[6]).size(buttonWidth, buttonHeight);  table.add(buttons[7]).size(buttonWidth, buttonHeight);  table.add(buttons[8]).size(buttonWidth, buttonHeight); table.row();
             addClickListener(buttons[6]); addClickListener(buttons[7]); addClickListener(buttons[8]);
             lvl3 = true;
@@ -363,7 +360,7 @@ public class play implements Screen {
     // Checks if its game over; if it is, sets gamestate to game over
     public void isGameover () {
         if ( time <= 0 ) {
-            gamestate = GAMESTATE.GAMEOVER;
+            Buttons.gamestate = Buttons.GAMESTATE.GAMEOVER;
         }
     }
 
@@ -385,14 +382,14 @@ public class play implements Screen {
         if ( isPressed ) {
             Vector2 loc = getStageLocation(labelTime);
             Vector2 loc2 = getStageLocation(labelScore);
-            font.setColor(Color.YELLOW);
-            font.draw(batch, "+1", loc.x, loc.y);
-            font.draw(batch, "+1", loc2.x, loc2.y);
+            buttonsHelper.getFont().setColor(Color.YELLOW);
+            buttonsHelper.getFont().draw(batch, "+1", loc.x, loc.y);
+            buttonsHelper.getFont().draw(batch, "+1", loc2.x, loc2.y);
         }
         if ( isBadPressed ) {
             Vector2 loc = getStageLocation(labelTime);
-            font.setColor(Color.RED);
-            font.draw(batch, "-1", loc.x, loc.y);
+            buttonsHelper.getFont().setColor(Color.RED);
+            buttonsHelper.getFont().draw(batch, "-1", loc.x, loc.y);
         }
     }
 
@@ -413,12 +410,20 @@ public class play implements Screen {
         labelHighscore.setText("Highscore: " + mainMenu.pref.getInteger("score", 0));
 
         // Fluctuate between yellow and red to warn player of low time.
-        if (time > 5F) {
-            font.setColor(Color.YELLOW);
+        if (time < 5F) {
+
+            labelStyleTime.fontColor = Color.YELLOW;
+            labelTime.setText( "Time: " + (df.format(time)));
+
+            if (fluctuate) {
+                labelStyleTime.fontColor = Color.RED;
+                labelTime.setText( "Time: " + (df.format(time)));
+            }
+        }
+        else {
+            labelStyleTime.fontColor = Color.RED;
             labelTime.setText( "Time: " + (df.format(time)));
         }
-        else
-            labelTime.setText( "Time: " + (df.format(time)));
     }
 
     /************************************************************************************************************
@@ -438,9 +443,9 @@ public class play implements Screen {
         // Assign stuff
         tablePause.add(pause);
         tablePause.row();
-        tablePause.add(buttonResume);
+        tablePause.add(buttonResume).size(buttonWidth, buttonHeight);
         tablePause.row();
-        tablePause.add(buttonQuit);
+        tablePause.add(buttonQuit).size(buttonWidth, buttonHeight);
         tablePause.row();
         tablePause.add(labelHighscore);
         tablePause.row();
@@ -454,7 +459,7 @@ public class play implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 isMute();
-                gamestate = GAMESTATE.RUNNING;
+                Buttons.gamestate = Buttons.GAMESTATE.RUNNING;
             }
         });
 
@@ -483,19 +488,18 @@ public class play implements Screen {
     }
 
     public void gameOver () {
-
         dispose();
+        game.setScreen(new gameOver(game));
+    }
+
+    public void setFlags () {
         lvl2 = false;
         lvl3 = false;
-        game.setScreen(new gameOver(game));
-
-
+        isBadPressed = false;
+        isPressed = false;
+        fluctuate = false;
     }
     // TODO: Maybe not. Add BETTER visual effects?
-
-    public void createButtonSkins () {
-
-    }
 
     /* Pseudo: For Add rings around buttons
         When listener added
