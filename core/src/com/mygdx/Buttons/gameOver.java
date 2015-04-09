@@ -57,8 +57,8 @@ public class gameOver implements Screen {
         table.debug();
 
         // Create button using buttonsHelper
-        Button button = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
-        Button button2 = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
+        Button button = new Button( buttonsHelper.getButtonStyleGray() );
+        Button button2 = new Button( buttonsHelper.getButtonStyleGray() );
 
         // Assign stuff
         table.add(gameOver);

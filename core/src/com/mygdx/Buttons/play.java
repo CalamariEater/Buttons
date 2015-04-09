@@ -24,7 +24,6 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 import static com.badlogic.gdx.math.MathUtils.random;
-import static com.mygdx.Buttons.buttonsHelper.createButtonStyle;
 
 /**
  * Created by KevinJohn on 2/18/2015.
@@ -62,10 +61,8 @@ public class play implements Screen {
     Button[] buttons = new Button[9];
     float buttonWidth = 212;
     float buttonHeight = 96;
-    private Button.ButtonStyle buttonStyleGreen = createButtonStyle("GreenButtonOff", "GreenButtonOn", false);
-    private Button.ButtonStyle buttonStyleRed = createButtonStyle("RedButtonOff", "RedButtonOn", false);
-    private Button.ButtonStyle buttonStyleGreenInverse = createButtonStyle("GreenButtonOff", "GreenButtonOn", true);
-    private Button.ButtonStyle buttonStyleRedInverse = createButtonStyle("RedButtonOff", "RedButtonOn", true);
+    //^ Issue here; the last setButtonStyle sets the whole shebang. Sharing buttonStyle instance; pointer to buttonsHelper style.
+
 
     // Flags
     private boolean lvl2 = false;
@@ -107,7 +104,7 @@ public class play implements Screen {
 
         // Set buttons
         for (int i = 0; i < 9; i++) {
-            buttons[i] = buttonsHelper.createButton( "GreenButtonOff", "GreenButtonOn", false);
+            buttons[i] = new Button(buttonsHelper.getButtonStyleGreen());
             System.out.println("Index: " + i);
         }
 
@@ -263,7 +260,7 @@ public class play implements Screen {
 
                 // Disable button
                 button.setTouchable(Touchable.disabled);
-                button.setStyle(buttonStyleGreenInverse);
+                button.setStyle(buttonsHelper.getButtonStyleGreenInverse());
                 button.clearListeners();
             }
         });
@@ -286,7 +283,7 @@ public class play implements Screen {
 
                 // Disable button
                 button.setTouchable(Touchable.disabled);
-                button.setStyle(buttonStyleRedInverse);
+                button.setStyle(buttonsHelper.getButtonStyleRedInverse());
                 button.clearListeners();
             }
         });
@@ -312,7 +309,7 @@ public class play implements Screen {
     public void setTouchable(int index) {
         if ( 0 == buttons[index].getListeners().size ) {
             buttons[index].setTouchable(Touchable.enabled);
-            buttons[index].setStyle(buttonStyleGreen);
+            buttons[index].setStyle(buttonsHelper.getButtonStyleGreen());
             addClickListener(buttons[index]);
             System.out.println("added a click listener");
         }
@@ -323,7 +320,7 @@ public class play implements Screen {
     public void setBadButton (int index) {
         if ( 0 == buttons[index].getListeners().size ) {
             buttons[index].setTouchable(Touchable.enabled);
-            buttons[index].setStyle(buttonStyleRed);
+            buttons[index].setStyle(buttonsHelper.getButtonStyleRed());
             addBadClickListener(buttons[index]);
             System.out.println("added a BAD click listener");
         }
@@ -434,9 +431,9 @@ public class play implements Screen {
         // table.debug();
 
         // Create button using buttonsHelper
-        Button buttonResume = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
-        Button buttonQuit = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
-        final Button buttonMute = buttonsHelper.createButton("MuteButtonOff", "MuteButtonOn", false);
+        Button buttonResume = new Button(buttonsHelper.getButtonStyleGray());
+        Button buttonQuit = new Button(buttonsHelper.getButtonStyleGray());
+        final Button buttonMute = new Button(buttonsHelper.getButtonStyleMute());
 
         // Assign stuff
         tablePause.add(pause);
@@ -475,11 +472,11 @@ public class play implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 if (!muted) {
                     muted = true;
-                    buttonMute.setStyle(createButtonStyle("MuteButtonOff", "MuteButtonOn", true));
+                    buttonMute.setStyle(buttonsHelper.getButtonStyleMuteInverse());
                 }
                 else {
                     muted = false;
-                    buttonMute.setStyle(createButtonStyle("MuteButtonOff", "MuteButtonOn", false));
+                    buttonMute.setStyle(buttonsHelper.getButtonStyleMute());
                 }
             }
         });
@@ -495,6 +492,10 @@ public class play implements Screen {
 
     }
     // TODO: Maybe not. Add BETTER visual effects?
+
+    public void createButtonSkins () {
+
+    }
 
     /* Pseudo: For Add rings around buttons
         When listener added

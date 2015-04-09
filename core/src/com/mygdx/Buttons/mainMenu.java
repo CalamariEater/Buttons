@@ -34,8 +34,8 @@ public class mainMenu implements Screen {
 
     // Buttons
     public buttonsHelper buttonsHelper = new buttonsHelper();
-    private Button button = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
-    private Button button2 = buttonsHelper.createButton("GrayButtonOff", "GrayButtonOn", false);
+    private Button button = new Button( buttonsHelper.getButtonStyleGray() );
+    private Button button2 = new Button( buttonsHelper.getButtonStyleGray() );
     float buttonWidth = 318;
     float buttonHeight = 144;
 

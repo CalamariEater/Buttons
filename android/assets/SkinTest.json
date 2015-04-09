@@ -1,6 +1,6 @@
 {
   "com.badlogic.gdx.graphics.g2d.BitmapFont": {
-    "text": { "file": "digital.fnt" }
+    "medium": { "file": "digital.fnt" }
   },
   "com.badlogic.gdx.scenes.scenes2d.ui.Label$LabelStyle": {
     "default": { "font": "text", "fontColor": "red" }
