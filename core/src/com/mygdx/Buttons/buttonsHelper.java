@@ -1,6 +1,8 @@
 package com.mygdx.Buttons;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -9,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 /**
  * Created by KevinJohn on 2/12/2015.
- * Helper Class ~ Creates a button
+ * Handles Resources
  */
 public class buttonsHelper {
 
@@ -18,6 +20,7 @@ public class buttonsHelper {
 
     public TextureAtlas buttonAtlas;
     public Skin buttonSkin;
+    private static Preferences pref = Gdx.app.getPreferences("My Preferences");
 
     private static BitmapFont font = new BitmapFont(Gdx.files.internal("digital.fnt"));
     private static BitmapFont fontLarge = new BitmapFont(Gdx.files.internal("digital.fnt"));
@@ -31,6 +34,8 @@ public class buttonsHelper {
     private static Button.ButtonStyle buttonStyleMuteInverse = new Button.ButtonStyle();
     private static TextButton.TextButtonStyle textButtonStyleGray = new TextButton.TextButtonStyle();
 
+    final private static Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button16.mp3"));
+
     public buttonsHelper (){
         buttonAtlas = new TextureAtlas(Gdx.files.internal("Buttons.pack"));
         buttonSkin = new Skin();
@@ -42,6 +47,7 @@ public class buttonsHelper {
         // Create buttonStyleGreen
         buttonStyleGreen.up = buttonSkin.getDrawable("GreenButtonOff");
         buttonStyleGreen.down = buttonSkin.getDrawable("GreenButtonOn");
+        // buttonStyleGreen.pressedOffsetY = -4;
 
         // Create buttonStyleGreenInverse
         buttonStyleGreenInverse.up = buttonSkin.getDrawable("GreenButtonOn");
@@ -71,6 +77,9 @@ public class buttonsHelper {
         textButtonStyleGray.up = buttonSkin.getDrawable("GrayButtonOff");
         textButtonStyleGray.down = buttonSkin.getDrawable("GrayButtonOn");
         textButtonStyleGray.font = font;
+        // textButtonStyleGray.downFontColor = Color.YELLOW;
+        // textButtonStyleGray.overFontColor = Color.WHITE;
+        textButtonStyleGray.pressedOffsetY = -10;
 
         // Scale fontLarge
         fontLarge.setScale(2);
@@ -95,6 +104,10 @@ public class buttonsHelper {
     public static BitmapFont getFont() { return font; }
 
     public static BitmapFont getFontLarge() { return fontLarge; }
+
+    public static Sound getSoundClick() { return soundClick; }
+
+    public static Preferences getPref() { return pref; }
 
     /*
     public static Button.ButtonStyle setButtonStyle(String Off, String On){
@@ -138,8 +151,7 @@ public class buttonsHelper {
         return buttonAtlas;
     }
 
-    // Disposes stuff
     public void buttonDispose() {
         this.buttonAtlas.dispose();
     }
-}
+    }

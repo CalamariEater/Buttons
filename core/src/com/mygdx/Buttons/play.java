@@ -3,7 +3,6 @@ package com.mygdx.Buttons;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 
@@ -47,7 +47,7 @@ public class play implements Screen {
     private SpriteBatch batch = new SpriteBatch();
     private Label.LabelStyle labelStyle = new Label.LabelStyle( buttonsHelper.getFont(), Color.RED );
     private Label labelScore = new Label( "Score: " + playerScore, labelStyle);
-    private Label labelHighscore = new Label( "Highscore: " + mainMenu.pref.getInteger("score", 0), labelStyle);
+    private Label labelHighscore = new Label( "Highscore: " + buttonsHelper.getPref().getInteger("score", 0), labelStyle);
 
 
     // Buttons
@@ -62,8 +62,6 @@ public class play implements Screen {
     private boolean isBadPressed = false;
     private boolean fluctuate = false;
 
-    final Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button16.mp3"));
-
     // For timer output
     public DecimalFormat df = new DecimalFormat("##.##");
 
@@ -77,9 +75,7 @@ public class play implements Screen {
     private Label pause = new Label("Paused", labelStyleLarge);
 
     // Muted
-    public boolean muted = false;
-
-    // ****** Visual Cues ****** TESTING
+    // public boolean muted = false;
 
     /***************************************************************************************************************
      * PLAY START
@@ -89,6 +85,9 @@ public class play implements Screen {
 
         PauseMenu();
         setFlags();
+
+        // Catch back key
+        Gdx.input.setCatchBackKey(true);
 
         // Reset current player score
         playerScore = 0;
@@ -172,8 +171,8 @@ public class play implements Screen {
                 drawBackground();
                 setLabels();
 
-                // TESTING PAUSE
-                if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+                // Pause if back key pressed
+                if (Gdx.input.isKeyJustPressed(Input.Keys.BACK))
                     Buttons.gamestate = Buttons.GAMESTATE.PAUSED;
 
                 stage.draw();
@@ -232,9 +231,9 @@ public class play implements Screen {
         backgroundTexture.dispose();
         backgroundTexturePause.dispose();
         stagePause.dispose();
-        soundClick.dispose();
         batch.dispose();
     }
+
 
     /*****************************************************************
      * Helper Functions
@@ -270,7 +269,6 @@ public class play implements Screen {
                 isMute();
 
                 // For visual cues
-
                 isBadPressed = true;
                 isPressed = false;
 
@@ -365,15 +363,15 @@ public class play implements Screen {
     }
 
     public void isHighscore () {
-        if ( mainMenu.pref.getInteger("score", 0) < playerScore) {
-            mainMenu.pref.putInteger( "score", playerScore );
-            mainMenu.pref.flush();
+        if ( buttonsHelper.getPref().getInteger("score", 0) < playerScore) {
+            buttonsHelper.getPref().putInteger("score", playerScore);
+            buttonsHelper.getPref().flush();
         }
     }
 
     public void isMute () {
-        if (!muted) {
-            soundClick.play();
+        if (!buttonsHelper.getPref().getBoolean("mute")) {
+            buttonsHelper.getSoundClick().play();
         }
     }
 
@@ -407,7 +405,7 @@ public class play implements Screen {
 
     public void setLabels () {
         labelScore.setText("Score: " + playerScore);
-        labelHighscore.setText("Highscore: " + mainMenu.pref.getInteger("score", 0));
+        labelHighscore.setText("Highscore: " + buttonsHelper.getPref().getInteger("score", 0));
 
         // Fluctuate between yellow and red to warn player of low time.
         if (time < 5F) {
@@ -436,8 +434,8 @@ public class play implements Screen {
         // table.debug();
 
         // Create button using buttonsHelper
-        Button buttonResume = new Button(buttonsHelper.getButtonStyleGray());
-        Button buttonQuit = new Button(buttonsHelper.getButtonStyleGray());
+        TextButton buttonResume = new TextButton( "Resume", buttonsHelper.getTextButtonStyleGray());
+        TextButton buttonQuit = new TextButton( "Quit", buttonsHelper.getTextButtonStyleGray());
         final Button buttonMute = new Button(buttonsHelper.getButtonStyleMute());
 
         // Assign stuff
@@ -475,12 +473,14 @@ public class play implements Screen {
         buttonMute.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!muted) {
-                    muted = true;
+                if (!buttonsHelper.getPref().getBoolean("mute", false)) {
+                    buttonsHelper.getPref().putBoolean("mute", true );
+                    // muted = true;
                     buttonMute.setStyle(buttonsHelper.getButtonStyleMuteInverse());
                 }
                 else {
-                    muted = false;
+                    buttonsHelper.getPref().putBoolean("mute", false);
+                    // muted = false;
                     buttonMute.setStyle(buttonsHelper.getButtonStyleMute());
                 }
             }

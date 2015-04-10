@@ -2,7 +2,6 @@ package com.mygdx.Buttons;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -35,7 +34,7 @@ public class gameOver implements Screen {
     private Label.LabelStyle labelStyleLarge = new Label.LabelStyle( buttonsHelper.getFontLarge(), Color.RED );
     // private Skin skin = new Skin(Gdx.files.internal("SkinTest.json"));
     private Label gameOver = new Label("Game Over", labelStyleLarge);
-    private Label labelHighscore = new Label( "Highscore: " + mainMenu.pref.getInteger("score", 0), labelStyle);
+    private Label labelHighscore = new Label( "Highscore: " + buttonsHelper.getPref().getInteger("score", 0), labelStyle);
     private Label labelScore = new Label( "Score: " + playerScore, labelStyle);
 
     float buttonWidth = 318;
@@ -47,8 +46,6 @@ public class gameOver implements Screen {
 
     @Override
     public void show() {
-
-        final Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button16.mp3"));
 
         // Set table up
         table.setFillParent(true);
@@ -74,23 +71,19 @@ public class gameOver implements Screen {
         button.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                soundClick.play();
-                System.out.println("BUTTON PRESSED!");
+                buttonsHelper.getSoundClick().play();
+                // System.out.println("BUTTON PRESSED!");
                 dispose();
                 game.setScreen(new play(game));
-                // super.clicked(event, x, y);
-
             }
         });
 
         button2.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                soundClick.play();
-                System.out.println("Quit button test PRESSED");
+                buttonsHelper.getSoundClick().play();
+                // System.out.println("Quit button test PRESSED");
                 Gdx.app.exit();
-                // super.clicked(event, x, y);
-
             }
         });
 

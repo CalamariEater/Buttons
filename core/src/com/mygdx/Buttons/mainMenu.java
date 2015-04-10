@@ -1,9 +1,7 @@
 package com.mygdx.Buttons;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -23,8 +21,6 @@ public class mainMenu implements Screen {
     // Asset Manager
     // public static AssetManager manager = new AssetManager();
 
-    public static Preferences pref = Gdx.app.getPreferences("My Preferences");
-
     final Buttons game;
 
     private Texture backgroundTexture = new Texture(Gdx.files.internal("beveledBackground.png"));
@@ -43,7 +39,7 @@ public class mainMenu implements Screen {
     private Label.LabelStyle labelStyleLarge = new Label.LabelStyle( buttonsHelper.getFontLarge(), Color.RED );
     private Label title = new Label("Buttons", labelStyleLarge);
 
-    private Label highscoreLabel = new Label("Highscore: " + pref.getInteger("score", 0), labelStyle );
+    private Label highscoreLabel = new Label("Highscore: " + buttonsHelper.getPref().getInteger("score", 0), labelStyle );
 
     public mainMenu (final Buttons it) {
         game = it;
@@ -52,16 +48,13 @@ public class mainMenu implements Screen {
     @Override
     public void show() {
 
-        // Sound
-        final Sound soundClick = Gdx.audio.newSound(Gdx.files.internal("button16.mp3"));
-
         // Set input for button
         Gdx.input.setInputProcessor(stage);
 
         button.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                soundClick.play();
+                buttonsHelper.getSoundClick().play();
                 dispose();
                 game.setScreen(new play(game));
                 // super.clicked(event, x, y);
@@ -71,7 +64,7 @@ public class mainMenu implements Screen {
         button2.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-               soundClick.play();
+                buttonsHelper.getSoundClick().play();
                 Gdx.app.exit();
                 // super.clicked(event, x, y);
 
