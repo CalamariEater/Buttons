@@ -52,6 +52,7 @@ public class play implements Screen {
 
     // Buttons
     Button[] buttons = new Button[9];
+    private Button buttonMute;
     float buttonWidth = 212;
     float buttonHeight = 96;
 
@@ -61,6 +62,7 @@ public class play implements Screen {
     private boolean isPressed = false;
     private boolean isBadPressed = false;
     private boolean fluctuate = false;
+    private boolean muted = buttonsHelper.getPref().getBoolean("mute", false);
 
     // For timer output
     public DecimalFormat df = new DecimalFormat("##.##");
@@ -74,14 +76,14 @@ public class play implements Screen {
     private Label.LabelStyle labelStyleLarge = new Label.LabelStyle( buttonsHelper.getFontLarge(), Color.RED );
     private Label pause = new Label("Paused", labelStyleLarge);
 
-    // Muted
-    // public boolean muted = false;
-
     /***************************************************************************************************************
      * PLAY START
      * @param it
      ***************************************************************************************************************/
     public play (final Buttons it) {
+
+        Buttons.gamestate = Buttons.GAMESTATE.RUNNING;
+        this.game = it;
 
         PauseMenu();
         setFlags();
@@ -93,10 +95,6 @@ public class play implements Screen {
         playerScore = 0;
 
         df.setRoundingMode(RoundingMode.DOWN);
-
-        Buttons.gamestate = Buttons.GAMESTATE.RUNNING;
-
-        this.game = it;
 
         // Set buttons
         for (int i = 0; i < 9; i++) {
@@ -131,10 +129,15 @@ public class play implements Screen {
                 if (Buttons.gamestate == Buttons.GAMESTATE.RUNNING) {
                     pickRandomButton();
                     // time -= 1D;
-                    if (lvl2)
+                    if (lvl2) {
                         pickRandomButton();
-                    if (lvl3)
                         pickRandomButton();
+                    }
+                    if (lvl3) {
+                        pickRandomButton();
+                        pickRandomButton();
+                        pickRandomButton();
+                    }
                     isPressed = false;
                     isBadPressed = false;
                     fluctuate = !fluctuate;
@@ -242,7 +245,7 @@ public class play implements Screen {
         button.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                isMute();
+                buttonsHelper.isMute(muted);
                 // For visual cues
                 isPressed = true;
                 isBadPressed = false;
@@ -266,7 +269,7 @@ public class play implements Screen {
         button.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                isMute();
+                buttonsHelper.isMute(muted);
 
                 // For visual cues
                 isBadPressed = true;
@@ -287,11 +290,11 @@ public class play implements Screen {
     // Picks a random index in terms of the level
     public int randomNumber ( ) {
         int i;
-        if ( lvl2 ) {
-            i = Math.round(random(5));
-        }
-        else if ( lvl3 ) {
+        if ( lvl3 ) {
             i = Math.round(random(8));
+        }
+        else if ( lvl2 ) {
+            i = Math.round(random(5));
         }
         else {
             i = Math.round(random(2));
@@ -334,7 +337,7 @@ public class play implements Screen {
     }
 
     public void addTime () {
-        if ( lvl2 )
+        if ( lvl3 || lvl2)
             time += 1;
         else
             time += 2;
@@ -342,15 +345,16 @@ public class play implements Screen {
 
     // Checks if go to next level
     public void lvlChange () {
-        if (playerScore >= 5 && !lvl2) {
+        if (playerScore >= 5 && !lvl2 &&!lvl3) {
             table.add(buttons[3]).size(buttonWidth, buttonHeight); table.add(buttons[4]).size(buttonWidth, buttonHeight); table.add(buttons[5]).size(buttonWidth, buttonHeight); table.row();
             addClickListener(buttons[3]); addClickListener(buttons[4]); addClickListener(buttons[5]);
             lvl2 = true;
         }
 
-        if (playerScore >= 10 && !lvl3) {
+        if (playerScore >= 10 && lvl2 && !lvl3) {
             table.add(buttons[6]).size(buttonWidth, buttonHeight);  table.add(buttons[7]).size(buttonWidth, buttonHeight);  table.add(buttons[8]).size(buttonWidth, buttonHeight); table.row();
             addClickListener(buttons[6]); addClickListener(buttons[7]); addClickListener(buttons[8]);
+            lvl2 = false;
             lvl3 = true;
         }
     }
@@ -366,12 +370,6 @@ public class play implements Screen {
         if ( buttonsHelper.getPref().getInteger("score", 0) < playerScore) {
             buttonsHelper.getPref().putInteger("score", playerScore);
             buttonsHelper.getPref().flush();
-        }
-    }
-
-    public void isMute () {
-        if (!buttonsHelper.getPref().getBoolean("mute")) {
-            buttonsHelper.getSoundClick().play();
         }
     }
 
@@ -436,7 +434,13 @@ public class play implements Screen {
         // Create button using buttonsHelper
         TextButton buttonResume = new TextButton( "Resume", buttonsHelper.getTextButtonStyleGray());
         TextButton buttonQuit = new TextButton( "Quit", buttonsHelper.getTextButtonStyleGray());
-        final Button buttonMute = new Button(buttonsHelper.getButtonStyleMute());
+        if ( !muted ) {
+            buttonMute = new Button(buttonsHelper.getButtonStyleMute());
+        }
+        else {
+            buttonMute = new Button(buttonsHelper.getButtonStyleMuteInverse());
+        }
+
 
         // Assign stuff
         tablePause.add(pause);
@@ -456,7 +460,7 @@ public class play implements Screen {
         buttonResume.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                isMute();
+                buttonsHelper.isMute(muted);
                 Buttons.gamestate = Buttons.GAMESTATE.RUNNING;
             }
         });
@@ -464,7 +468,7 @@ public class play implements Screen {
         buttonQuit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                isMute();
+                buttonsHelper.isMute(muted);
                 System.out.println("Quit button PRESSED");
                 Gdx.app.exit();
             }
@@ -473,15 +477,17 @@ public class play implements Screen {
         buttonMute.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!buttonsHelper.getPref().getBoolean("mute", false)) {
-                    buttonsHelper.getPref().putBoolean("mute", true );
-                    // muted = true;
+                if (!muted) {
+                    muted = true;
                     buttonMute.setStyle(buttonsHelper.getButtonStyleMuteInverse());
+                    buttonsHelper.getPref().putBoolean("mute", muted );
+                    buttonsHelper.getPref().flush();
                 }
                 else {
-                    buttonsHelper.getPref().putBoolean("mute", false);
-                    // muted = false;
+                    muted = false;
                     buttonMute.setStyle(buttonsHelper.getButtonStyleMute());
+                    buttonsHelper.getPref().putBoolean("mute", muted);
+                    buttonsHelper.getPref().flush();
                 }
             }
         });

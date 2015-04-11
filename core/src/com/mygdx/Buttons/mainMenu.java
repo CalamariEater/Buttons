@@ -29,17 +29,18 @@ public class mainMenu implements Screen {
 
     // Buttons
     public buttonsHelper buttonsHelper = new buttonsHelper();
-    private TextButton button = new TextButton("Play", buttonsHelper.getTextButtonStyleGray());
-    private TextButton button2 = new TextButton("Quit", buttonsHelper.getTextButtonStyleGray());
+    private TextButton button = new TextButton("Play", com.mygdx.Buttons.buttonsHelper.getTextButtonStyleGray());
+    private TextButton button2 = new TextButton("Quit", com.mygdx.Buttons.buttonsHelper.getTextButtonStyleGray());
     float buttonWidth = 318;
     float buttonHeight = 144;
 
     // Labels
-    private Label.LabelStyle labelStyle = new Label.LabelStyle( buttonsHelper.getFont(), Color.RED );
-    private Label.LabelStyle labelStyleLarge = new Label.LabelStyle( buttonsHelper.getFontLarge(), Color.RED );
+    private Label.LabelStyle labelStyle = new Label.LabelStyle( com.mygdx.Buttons.buttonsHelper.getFont(), Color.RED );
+    private Label.LabelStyle labelStyleLarge = new Label.LabelStyle( com.mygdx.Buttons.buttonsHelper.getFontLarge(), Color.RED );
     private Label title = new Label("Buttons", labelStyleLarge);
+    private Label highscoreLabel = new Label("Highscore: " + com.mygdx.Buttons.buttonsHelper.getPref().getInteger("score", 0), labelStyle );
 
-    private Label highscoreLabel = new Label("Highscore: " + buttonsHelper.getPref().getInteger("score", 0), labelStyle );
+    private boolean muted = com.mygdx.Buttons.buttonsHelper.getPref().getBoolean("mute", false);
 
     public mainMenu (final Buttons it) {
         game = it;
@@ -54,7 +55,7 @@ public class mainMenu implements Screen {
         button.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                buttonsHelper.getSoundClick().play();
+                com.mygdx.Buttons.buttonsHelper.isMute(muted);
                 dispose();
                 game.setScreen(new play(game));
                 // super.clicked(event, x, y);
@@ -64,7 +65,7 @@ public class mainMenu implements Screen {
         button2.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                buttonsHelper.getSoundClick().play();
+                com.mygdx.Buttons.buttonsHelper.isMute(muted);
                 Gdx.app.exit();
                 // super.clicked(event, x, y);
 

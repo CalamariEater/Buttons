@@ -109,6 +109,12 @@ public class buttonsHelper {
 
     public static Preferences getPref() { return pref; }
 
+    public static void isMute(boolean muted) {
+        if (!muted) {
+            buttonsHelper.getSoundClick().play();
+        }
+    }
+
     /*
     public static Button.ButtonStyle setButtonStyle(String Off, String On){
         buttonStyle.up = buttonSkin.getDrawable(Off);

@@ -40,6 +40,8 @@ public class gameOver implements Screen {
     float buttonWidth = 318;
     float buttonHeight = 144;
 
+    private boolean muted = buttonsHelper.getPref().getBoolean("mute", false);
+
     public gameOver (final Buttons it) {
         game = it;
     }
@@ -71,7 +73,7 @@ public class gameOver implements Screen {
         button.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                buttonsHelper.getSoundClick().play();
+                buttonsHelper.isMute(muted);
                 // System.out.println("BUTTON PRESSED!");
                 dispose();
                 game.setScreen(new play(game));
@@ -81,7 +83,7 @@ public class gameOver implements Screen {
         button2.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                buttonsHelper.getSoundClick().play();
+                buttonsHelper.isMute(muted);
                 // System.out.println("Quit button test PRESSED");
                 Gdx.app.exit();
             }
